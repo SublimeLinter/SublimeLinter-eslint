@@ -10,7 +10,7 @@
 
 """This module exports the ESLint plugin class."""
 
-from SublimeLinter.lint import Linter, util
+from SublimeLinter.lint import Linter
 
 
 class ESLint(Linter):
