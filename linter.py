@@ -19,13 +19,14 @@ class ESLint(Linter):
 
     syntax = ('javascript', 'html')
     cmd = ('eslint')
-    tempfile_suffix = 'js'
     regex = (
-        r'^(.+?: line (?P<line>\d+), col (?P<col>\d+), '
-        r'(?P<error>Error) \- '
-        r'(?P<message>.+))'
+        r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
+        r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
+        r'(?P<message>.+)'
     )
+    line_col_base = (1, 0)
     selectors = {
         'html': 'source.js.embedded.html'
     }
-    config_file = ('--config', '.eslintrc')
+    tempfile_suffix = 'js'
+    config_file = ('--config', 'eslint.json')
