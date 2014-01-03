@@ -18,7 +18,7 @@ class ESLint(Linter):
     """Provides an interface to the jshint executable."""
 
     syntax = ('javascript', 'html')
-    cmd = ('eslint')
+    cmd = 'eslint'
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
