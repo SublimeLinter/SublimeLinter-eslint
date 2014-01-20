@@ -15,10 +15,10 @@ from SublimeLinter.lint import Linter
 
 class ESLint(Linter):
 
-    """Provides an interface to the eslint executable."""
+    """Provides an interface to the jshint executable."""
 
     syntax = ('javascript', 'html')
-    cmd = 'eslint'
+    cmd = 'eslint --format=compact'
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
