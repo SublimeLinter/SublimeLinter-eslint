@@ -29,4 +29,4 @@ class ESLint(Linter):
         'html': 'source.js.embedded.html'
     }
     tempfile_suffix = 'js'
-    config_file = ('--config', 'eslint.json')
+    config_file = ('--config', '.eslintrc')
