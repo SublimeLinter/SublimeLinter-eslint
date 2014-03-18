@@ -15,7 +15,7 @@ from SublimeLinter.lint import Linter
 
 class ESLint(Linter):
 
-    """Provides an interface to the jshint executable."""
+    """Provides an interface to the eslint executable."""
 
     syntax = ('javascript', 'html')
     cmd = 'eslint --format=compact'
