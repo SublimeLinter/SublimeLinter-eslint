@@ -21,7 +21,7 @@ class ESLint(Linter):
     cmd = 'eslint --format=compact * @'
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
-    version_requirement = '>= 0.3.0'
+    version_requirement = '>= 0.7.1'
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
