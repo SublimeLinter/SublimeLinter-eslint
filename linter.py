@@ -18,10 +18,10 @@ class ESLint(Linter):
     """Provides an interface to the eslint executable."""
 
     syntax = ('javascript', 'html', 'javascriptnext')
-    cmd = 'eslint --format=compact'
+    cmd = 'eslint --format=compact --stdin'
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
-    version_requirement = '>= 0.3.0'
+    version_requirement = '>= 0.9.0'
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
@@ -31,5 +31,3 @@ class ESLint(Linter):
     selectors = {
         'html': 'source.js.embedded.html'
     }
-    tempfile_suffix = 'js'
-    config_file = ('--config', '.eslintrc', '~')
