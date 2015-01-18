@@ -17,7 +17,7 @@ class ESLint(Linter):
 
     """Provides an interface to the eslint executable."""
 
-    syntax = ('javascript', 'html', 'javascriptnext')
+    syntax = ('javascript', 'html', 'javascriptnext', 'javascript 6to5')
     cmd = 'eslint --format=compact --stdin'
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
