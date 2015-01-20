@@ -10,14 +10,15 @@
 
 """This module exports the ESLint plugin class."""
 
-from SublimeLinter.lint import Linter
+from SublimeLinter.lint import NodeLinter
 
 
-class ESLint(Linter):
+class ESLint(NodeLinter):
 
     """Provides an interface to the eslint executable."""
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript 6to5')
+    npm_name = 'eslint'
     cmd = 'eslint --format=compact --stdin'
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
