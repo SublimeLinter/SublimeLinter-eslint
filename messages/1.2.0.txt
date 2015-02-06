@@ -1,0 +1,7 @@
+# SublimeLinter-eslint
+
+v1.2.0
+
+**Important**
+
+Now plugin can use locally installed `eslint` in `node_modules` folder before globally installed one (#21).
