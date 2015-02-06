@@ -11,10 +11,14 @@ Before using this plugin, you must ensure that `eslint` is installed on your sys
 
 1. Install [Node.js](http://nodejs.org) (and [npm](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) on Linux).
 
-1. Install `eslint` by typing the following in a terminal:
+1. Install `eslint` globally by typing the following in a terminal:
    ```
    npm install -g eslint
    ```
+Or install `eslint` locally in your project folder:
+    ```
+    npm install eslint
+    ```
 
 1. If you are using `nvm` and `zsh`, ensure that the line to load `nvm` is in `.zprofile` and not `.zshrc`.
 
