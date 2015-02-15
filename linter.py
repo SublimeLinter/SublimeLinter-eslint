@@ -17,7 +17,7 @@ class ESLint(NodeLinter):
 
     """Provides an interface to the eslint executable."""
 
-    syntax = ('javascript', 'html', 'javascriptnext', 'javascript 6to5')
+    syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)')
     npm_name = 'eslint'
     cmd = 'eslint --format=compact --stdin'
     version_args = '--version'
