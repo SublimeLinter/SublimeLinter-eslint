@@ -1,0 +1,24 @@
+# SublimeLinter-eslint
+
+v1.3.0
+
+ESLint version was changed to 0.12.0. 
+
+JavaScript (JSX) and JavaScript (Babel) syntax were added. Enable JSX validation in your `.eslintrc` file:
+
+```
+"ecmaFeatures": {
+    "jsx": true
+}
+```
+
+Or still skip to lint `.jsx` files with your `.sublimelinterrc` configuration:
+
+```
+
+"linters": {
+    "eslint": {
+        "excludes": ["**/*.jsx"]
+    }
+}
+```
