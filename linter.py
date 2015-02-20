@@ -22,7 +22,7 @@ class ESLint(NodeLinter):
     cmd = 'eslint --format=compact --stdin'
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
-    version_requirement = '>= 0.9.0'
+    version_requirement = '>= 0.12.0'
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
