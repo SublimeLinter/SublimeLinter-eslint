@@ -28,7 +28,7 @@ Once `eslint` is installed, you must ensure it is in your system PATH so that Su
 
 Once you have installed `eslint` you can proceed to install the SublimeLinter-eslint plugin if it is not yet installed.
 
-**Note:** This plugin requires `eslint` 0.9.0 or later.
+**Note:** This plugin requires `eslint` 0.12.0 or later.
 
 ### Plugin installation
 Please use [Package Control][pc] to install the linter plugin. This will ensure that the plugin will be updated when new versions are available. If you want to install from source so you can modify the source code, you probably know what you are doing so we won’t cover that here.
