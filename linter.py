@@ -19,7 +19,7 @@ class ESLint(NodeLinter):
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)', 'javascript (jsx)')
     npm_name = 'eslint'
-    cmd = 'eslint --format=compact --stdin'
+    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 0.12.0'
