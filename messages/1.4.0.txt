@@ -1,0 +1,5 @@
+# SublimeLinter-eslint
+
+v1.4.0
+
+ESLint version was changed to 0.20.0 to support `--stdin-filename` option.
