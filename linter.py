@@ -9,7 +9,7 @@
 #
 
 """This module exports the ESLint plugin class."""
-
+import os, re
 from SublimeLinter.lint import NodeLinter
 
 
@@ -19,7 +19,7 @@ class ESLint(NodeLinter):
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)', 'javascript (jsx)')
     npm_name = 'eslint'
-    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
+    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 0.20.0'
@@ -32,3 +32,11 @@ class ESLint(NodeLinter):
     selectors = {
         'html': 'source.js.embedded.html'
     }
+    
+    def run(self, cmd, code):
+        basename = os.path.basename(self.filename)
+        cmd = cmd + [basename, '@']
+        str = super(ESLint, self).run(cmd, code)
+        if re.match('.*File ignored because of your \.eslintignore file\..*', str):
+            return None
+        return str
