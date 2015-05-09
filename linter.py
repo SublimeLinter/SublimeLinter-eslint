@@ -12,6 +12,7 @@
 
 import sublime
 import os
+import re
 from SublimeLinter.lint import NodeLinter
 
 
@@ -30,10 +31,33 @@ class ESLint(NodeLinter):
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
         r'(?P<message>.+)'
     )
+    config_fail_regex = re.compile(r'^Cannot read config file: .*\r?\n')
+    crash_regex = re.compile(
+        r'^(.*?)\r?\n\w*Error: \1',
+        re.MULTILINE
+    )
     line_col_base = (1, 0)
     selectors = {
         'html': 'source.js.embedded.html'
     }
+
+    def find_errors(self, output):
+        """
+        Parses errors from linter's output
+
+        We override this method to handle parsing eslint crashes
+        """
+
+        match = self.config_fail_regex.match(output)
+        if match:
+            return [(match, 0, None, "Error", "", match.group(0), None)]
+
+        match = self.crash_regex.match(output)
+        if match:
+            msg = "ESLint crashed: %s" % match.group(1)
+            return [(match, 0, None, "Error", "", msg, None)]
+
+        return super().find_errors(output)
 
     def split_match(self, match):
         """
@@ -51,7 +75,7 @@ class ESLint(NodeLinter):
 
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
-        
+
         window = self.view.window()
         vars = window.extract_variables()
         relfilename = os.path.relpath(self.filename, vars['folder'])
