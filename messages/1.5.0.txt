@@ -1,0 +1,6 @@
+# SublimeLinter-eslint
+
+v1.5.0
+
+* Output ESLint crash errors
+* Ignore files by `.eslintignore` if use ESLint >=0.21.0
