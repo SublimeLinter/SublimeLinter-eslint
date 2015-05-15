@@ -77,10 +77,10 @@ class ESLint(NodeLinter):
         """Run an external executable using stdin to pass code and return its output."""
 
         if '__RELATIVE_TO_FOLDER__' in cmd:
-            window = self.view.window()
-            vars = window.extract_variables()
 
             if int(sublime.version()) >= 3080:
+                window = self.view.window()
+                vars = window.extract_variables()
                 relfilename = os.path.relpath(self.filename, vars['folder'])
             else:
                 relfilename = self.filename
