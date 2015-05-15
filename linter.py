@@ -76,13 +76,15 @@ class ESLint(NodeLinter):
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
 
-        window = self.view.window()
-        vars = window.extract_variables()
-        relfilename = os.path.relpath(self.filename, vars['folder'])
+        if int(sublime.version()) >= 3080:
 
-        if '__RELATIVE_TO_FOLDER__' in cmd:
-            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
-        elif not code:
-            cmd.append(self.filename)
+            if '__RELATIVE_TO_FOLDER__' in cmd:
+                window = self.view.window()
+                vars = window.extract_variables()
+                relfilename = os.path.relpath(self.filename, vars['folder'])
+
+                cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
+            elif not code:
+                cmd.append(self.filename)
 
         return super().communicate(cmd, code)
