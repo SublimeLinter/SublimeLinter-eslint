@@ -78,14 +78,17 @@ class ESLint(NodeLinter):
 
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
+            relfilename = self.filename
+
             if int(sublime.version()) >= 3080:
                 window = self.view.window()
                 vars = window.extract_variables()
-                relfilename = os.path.relpath(self.filename, vars['folder'])
-            else:
-                relfilename = self.filename
+
+                if 'folder' in vars:
+                    relfilename = os.path.relpath(self.filename, vars['folder'])
 
             cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
+
         elif not code:
             cmd.append(self.filename)
 
