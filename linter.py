@@ -23,6 +23,7 @@ class ESLint(NodeLinter):
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)', 'javascript (jsx)', 'jsx-real')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
+    env = {}
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 0.20.0'
@@ -79,15 +80,18 @@ class ESLint(NodeLinter):
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
             relfilename = self.filename
+            window = self.view.window()
 
             if int(sublime.version()) >= 3080:
-                window = self.view.window()
                 vars = window.extract_variables()
 
                 if 'folder' in vars:
                     relfilename = os.path.relpath(self.filename, vars['folder'])
 
             cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
+
+            self.env['SUBLIME_ESLINT_FOLDERS'] = ';'.join(window.folders())
+            self.env['SUBLIME_ESLINT_FILE'] = relfilename
 
         elif not code:
             cmd.append(self.filename)
