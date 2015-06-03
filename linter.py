@@ -43,9 +43,9 @@ class ESLint(NodeLinter):
 
     def find_errors(self, output):
         """
-        Parses errors from linter's output
+        Parse errors from linter's output.
 
-        We override this method to handle parsing eslint crashes
+        We override this method to handle parsing eslint crashes.
         """
 
         match = self.config_fail_regex.match(output)
@@ -64,7 +64,6 @@ class ESLint(NodeLinter):
         Extract and return values from match.
 
         We override this method to silent warning by .eslintignore settings.
-
         """
 
         match, line, col, error, warning, message, near = super().split_match(match)
