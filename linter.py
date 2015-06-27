@@ -78,9 +78,11 @@ class ESLint(NodeLinter):
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
             relfilename = self.filename
+            window = self.view.window()
 
-            if int(sublime.version()) >= 3080:
-                window = self.view.window()
+            # can't get active folder, it will work only if there is one folder in project
+            if int(sublime.version()) >= 3080 and len(window.folders()) < 2:
+
                 vars = window.extract_variables()
 
                 if 'folder' in vars:
