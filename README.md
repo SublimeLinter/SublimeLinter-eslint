@@ -15,10 +15,13 @@ Before using this plugin, you must ensure that `eslint` is installed on your sys
    ```
    npm install -g eslint
    ```
-Or install `eslint` locally in your project folder:
+Or install `eslint` locally in your project folder (**you must have package.json file there**):
     ```
+    npm init -f 
     npm install eslint
     ```
+
+Reopen your project next (or restart ST) to make sure local `eslint` will be used.
 
 1. If you are using `nvm` and `zsh`, ensure that the line to load `nvm` is in `.zprofile` and not `.zshrc`.
 
@@ -43,6 +46,61 @@ To install via Package Control, do the following:
 For general information on how SublimeLinter works with settings, please see [Settings][settings]. For information on generic linter settings, please see [Linter Settings][linter-settings].
 
 You can configure `eslint` options in the way you would from the command line, with `.eslintrc` files. For more information, see the [eslint docs](https://github.com/nzakas/eslint/wiki).
+
+## FAQ and Troubleshooting
+
+##### I've got 'SublimeLinter: ERROR: eslint cannot locate 'eslint' in ST console when I try to use locally installed `eslint`.
+
+You **must** have `package.json` file if install `eslint` locally. Also, restart project or ST itself after to make sure SublimeLinter uses correct `eslint` instance.
+
+```
+npm init -f
+npm install eslint
+```
+
+##### Plugin still does not work or there are errors in ST console.
+
+Update `eslint` instance, probably you use outdated version and SublimeLinter does not check it properly sometimes.
+
+##### I want plugin to use my `.eslintignore` settings.
+
+It does it now.
+
+##### I want not to lint files if there is no `.eslintrc` file in project folder.
+
+Use `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#reset) option, add it to your SublimeLinter global settings or project `.sublimelinterrc` file as below. Add `--no-reset` option to project `.sublimelinterrc` to overwrite it back.
+
+```
+{
+    "linters": {
+        "eslint": {
+            "args": [
+                "--reset"
+            ]
+        }
+    }
+}
+```
+
+##### I want to use global `.eslintrc` config.
+
+Plugin uses the same [configuration hierarchy](http://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy) as `eslint` itself, so add `.eslintrc` to your home directory or ancestor directory of project.
+
+##### `context.getFilename()` in rule returns relative path.
+
+It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLinter settings:
+
+```
+{
+    "linters": {
+        "eslint": {
+            "args": [
+                "--stdin-filename", "@"
+            ]
+        }
+    }
+}
+```
 
 ## Contributing
 If you would like to contribute enhancements or fixes, please do the following:
