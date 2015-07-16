@@ -86,6 +86,23 @@ Use `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#
 
 Plugin uses the same [configuration hierarchy](http://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy) as `eslint` itself, so add `.eslintrc` to your home directory or ancestor directory of project.
 
+##### I want to use custom rules, global `.eslintignore` file, etc.
+
+You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-line-interface#options) of `eslint` with `args` key in SublimeLinter configs. 
+
+```
+{
+    "linters": {
+        "eslint": {
+            "args": [
+                "--ignore-path", "~/eslint_ignore",
+                "--rulesdir", "~/rules"
+            ]
+        }
+    }
+}
+```
+
 ##### `context.getFilename()` in rule returns relative path.
 
 It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLinter settings:
