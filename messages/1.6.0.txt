@@ -1,0 +1,5 @@
+# SublimeLinter-eslint
+
+v1.6.0
+
+* Use ESLint >=1.0.0, switch to 1-based columns
