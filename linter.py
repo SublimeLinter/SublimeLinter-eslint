@@ -25,7 +25,7 @@ class ESLint(NodeLinter):
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
-    version_requirement = '>= 0.20.0'
+    version_requirement = '>= 1.0.0'
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
@@ -36,7 +36,7 @@ class ESLint(NodeLinter):
         r'^(.*?)\r?\n\w*Error: \1',
         re.MULTILINE
     )
-    line_col_base = (1, 0)
+    line_col_base = (1, 1)
     selectors = {
         'html': 'source.js.embedded.html'
     }
