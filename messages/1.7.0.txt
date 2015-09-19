@@ -1,0 +1,5 @@
+# SublimeLinter-eslint
+
+v1.7.0
+
+Basic support of (eslint_d)[https://github.com/mantoni/eslint_d.js] was added. To make it works, add option `"eslint_d": true` to `eslint` section of SublimeLinter settings.  Now it works only with saved content of file, so probably you should set `Lint Mode` of SublimeLinter to `Load/save` or `Save only`.
