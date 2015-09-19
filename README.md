@@ -119,6 +119,10 @@ It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLint
 }
 ```
 
+##### Plugin does not lint files in symlinked folders. 
+
+It looks like ST/SublimeLinter/ESLint issue. Use solution from previous paragraph, set option `--stdin-filename` to `@`.
+
 ##### There is no `SublimeLinter-contrib-eslint` package to install in Package Control packages list.
 
 Check if you already have it installed, please.
