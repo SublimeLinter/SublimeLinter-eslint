@@ -17,7 +17,7 @@ Before using this plugin, you must ensure that `eslint` is installed on your sys
    ```
 Or install `eslint` locally in your project folder (**you must have package.json file there**):
     ```
-    npm init -f 
+    npm init -f
     npm install eslint
     ```
 
@@ -51,7 +51,7 @@ In addition to the standard SublimeLinter settings, SublimeLinter-contrib-eslint
 |:------|:----------|:------------:|:-------------:|
 |eslint_d|runs "[eslint_d][eslint_d]" instead of "eslint"| | |
 
-[eslint_d][eslint_d] is a tool to reduce `eslint` startup time by running a server in the background. Now it works only with saved content of file, so probably you should set `Lint Mode` of SublimeLinter to `Load/save` or `Save only`. You must have `eslint_d` installed globally or locally with `npm install eslint_d`.
+[eslint_d][eslint_d] is a tool to reduce `eslint` startup time by running a server in the background. You must have `eslint_d` installed globally or locally with `npm install eslint_d`.
 
 You can configure `eslint` options in the way you would from the command line, with `.eslintrc` files. For more information, see the [eslint docs](https://github.com/nzakas/eslint/wiki).
 
@@ -72,7 +72,7 @@ Update `eslint` instance, probably you use outdated version and SublimeLinter do
 
 ##### I want plugin to use my `.eslintignore` settings.
 
-It does it now. 
+It does it now.
 
 ##### I want not to lint files if there is no `.eslintrc` file in project folder (for ESLint <1.0.0).
 
@@ -96,7 +96,7 @@ Plugin uses the same [configuration hierarchy](http://eslint.org/docs/user-guide
 
 ##### I want to use custom rules, global `.eslintignore` file, etc.
 
-You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-line-interface#options) of `eslint` with `args` key in SublimeLinter configs. 
+You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-line-interface#options) of `eslint` with `args` key in SublimeLinter configs.
 
 ```
 {
@@ -127,7 +127,7 @@ It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLint
 }
 ```
 
-##### Plugin does not lint files in symlinked folders. 
+##### Plugin does not lint files in symlinked folders.
 
 It looks like ST/SublimeLinter/ESLint issue. Use solution from previous paragraph, set option `--stdin-filename` to `@`.
 
