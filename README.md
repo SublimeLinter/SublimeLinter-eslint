@@ -45,14 +45,6 @@ To install via Package Control, do the following:
 ## Settings
 For general information on how SublimeLinter works with settings, please see [Settings][settings]. For information on generic linter settings, please see [Linter Settings][linter-settings].
 
-In addition to the standard SublimeLinter settings, SublimeLinter-contrib-eslint provides its own settings. Those marked as “Inline Setting” or “Inline Override” may also be [used inline][inline-settings].
-
-|Setting|Description|Inline Setting|Inline Override|
-|:------|:----------|:------------:|:-------------:|
-|eslint_d|runs "[eslint_d][eslint_d]" instead of "eslint"| | |
-
-[eslint_d][eslint_d] is a tool to reduce `eslint` startup time by running a server in the background. You must have `eslint_d` installed globally or locally with `npm install eslint_d`.
-
 You can configure `eslint` options in the way you would from the command line, with `.eslintrc` files. For more information, see the [eslint docs](https://github.com/nzakas/eslint/wiki).
 
 ## FAQ and Troubleshooting

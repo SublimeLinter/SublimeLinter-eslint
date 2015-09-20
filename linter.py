@@ -21,16 +21,8 @@ class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)', 'javascript (jsx)', 'jsx-real')
-    executables = {
-        'eslint': {
-            'npm_name': 'eslint',
-            'cmd': ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
-        },
-        'eslint_d': {
-            'npm_name': 'eslint_d',
-            'cmd': ('eslint_d', '@')
-        }
-    }
+    npm_name = 'eslint'
+    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 1.0.0'
@@ -102,15 +94,3 @@ class ESLint(NodeLinter):
             cmd.append(self.filename)
 
         return super().communicate(cmd, code)
-
-    def cmd(self):
-        """Support eslint_d."""
-
-        executable = self.executables['eslint']
-
-        if self.get_view_settings().get('eslint_d', False):
-            executable = self.executables['eslint_d']
-
-        self.npm_name = executable['npm_name']
-
-        return self.build_cmd(executable['cmd'])
