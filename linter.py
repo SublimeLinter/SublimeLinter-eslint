@@ -28,7 +28,7 @@ class ESLint(NodeLinter):
         },
         'eslint_d': {
             'npm_name': 'eslint_d',
-            'cmd': ('eslint_d', 'lint', '@')
+            'cmd': ('eslint_d', '@')
         }
     }
     version_args = '--version'
