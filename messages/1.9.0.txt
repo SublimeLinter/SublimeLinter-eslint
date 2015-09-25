@@ -1,0 +1,5 @@
+# SublimeLinter-eslint
+
+v1.9.0
+
+Support of (eslint_d)[https://github.com/mantoni/eslint_d.js] was moved to separate plugin https://github.com/roadhump/SublimeLinter-contrib-eslint_d
