@@ -76,7 +76,7 @@ class ESLint(NodeLinter):
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
 
-        if '__RELATIVE_TO_FOLDER__' in cmd:
+        if '__RELATIVE_TO_FOLDER__' in cmd and self.filename[0] == self.view.window().extract_variables()['folder'][0]:
 
             relfilename = self.filename
             window = self.view.window()
