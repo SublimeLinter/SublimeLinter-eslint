@@ -13,8 +13,15 @@
 import sublime
 import os
 import re
+import sys
 from SublimeLinter.lint import NodeLinter
 
+def screen_path(path):
+
+    if sys.platform in ('win32'):
+        return '"' + path + '"'
+    else:
+        return path
 
 class ESLint(NodeLinter):
 
@@ -89,9 +96,9 @@ class ESLint(NodeLinter):
                 if 'folder' in vars:
                     relfilename = os.path.relpath(self.filename, vars['folder'])
 
-            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
+            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = screen_path(relfilename)
 
         elif not code:
-            cmd.append(self.filename)
+            cmd.append(screen_path(self.filename))
 
         return super().communicate(cmd, code)
