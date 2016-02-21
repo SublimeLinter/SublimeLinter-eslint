@@ -1,74 +1,74 @@
 SublimeLinter-eslint
 =========================
 
-This linter plugin for [SublimeLinter][docs] provides an interface to [ESLint](https://github.com/nzakas/eslint). It will be used with files that have the “javascript” syntax.
+这个校验工具为 [SublimeLinter][docs] 提供 [ESLint](https://github.com/nzakas/eslint)接口. 它为带有“javascript”语法的文件提供帮助。
 
-## Installation
-SublimeLinter 3 must be installed in order to use this plugin. If SublimeLinter 3 is not installed, please follow the instructions [here][installation].
+## 安装
+SublimeLinter 3 必须安装. 如果 SublimeLinter 3 没有安装，请参考如下指导 [here][installation].
 
-### Linter installation
-Before using this plugin, you must ensure that `eslint` is installed on your system. To install `eslint`, do the following:
+### 校验器 安装
+使用本插件前, 你必须保证`eslint` 已经安装在你洗头.安装 `eslint`流程:
 
-1. Install [Node.js](http://nodejs.org) (and [npm](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) on Linux).
+1. 安装 [Node.js](http://nodejs.org) (和 [npm](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) on Linux).
 
-1. Install `eslint` globally by typing the following in a terminal:
+1. 在终端全局安装 `eslint` :
    ```
    npm install -g eslint
    ```
-Or install `eslint` locally in your project folder (**you must have package.json file there**):
+或，在你项目路径，局部安装 `eslint`  (**you must have package.json file there**):
     ```
     npm init -f
     npm install eslint
     ```
 
-Reopen your project next (or restart ST) to make sure local `eslint` will be used.
+接着重新打开你的项目 (或 重启 ST) 保证 `eslint` 可以使用.
 
-1. If you are using `nvm` and `zsh`, ensure that the line to load `nvm` is in `.zprofile` and not `.zshrc`.
+1. 如果你使用 `nvm` 和 `zsh`, 保证在`.zprofile`加载 `nvm` ，而非 `.zshrc`.
 
-1. If you are using `zsh` and `oh-my-zsh`, do not load the `nvm` plugin for `oh-my-zsh`.
+1. 如果你使用 `zsh` 和 `oh-my-zsh`,别为 `oh-my-zsh`加载`nvm` 插件.
 
-Once `eslint` is installed, you must ensure it is in your system PATH so that SublimeLinter can find it. This may not be as straightforward as you think, so please read about [how linter executables are located][locating-executables] in the documentation.
+一旦 `eslint` 安装, 必须保证它在系统路径，让 SublimeLinter可以找到它. 这可能不会是你所想的理所当然, 请阅读 [how linter executables are located][locating-executables].
 
-Once you have installed `eslint` you can proceed to install the SublimeLinter-eslint plugin if it is not yet installed.
+一旦你安装完 `eslint`，你可以进一步安装 SublimeLinter-eslint插件，如果你还没有安装的话.
 
-**Note:** This plugin requires `eslint` 0.20.0 or later.
+**注意:** 本插件需要 `eslint` 0.20.0 或更高.
 
-### Plugin installation
-Please use [Package Control][pc] to install the linter plugin. This will ensure that the plugin will be updated when new versions are available. If you want to install from source so you can modify the source code, you probably know what you are doing so we won’t cover that here.
+### 插件 安装
+请使用 [Package Control][pc]安装校验插件. 这可以保证安装最新版本的插件. 如果你希望从源码安装，且做些修改,我想你可能知道怎么做，这里不多言.
 
-To install via Package Control, do the following:
+通过 Package Control安装流程:
 
-1. Within Sublime Text, bring up the [Command Palette][cmd] and type `install`. Among the commands you should see `Package Control: Install Package`. If that command is not highlighted, use the keyboard or mouse to select it. There will be a pause of a few seconds while Package Control fetches the list of available plugins.
+1. 在 Sublime Text, 启动 [Command Palette][cmd]，输入 `install`，将出现 `Package Control: Install Package`. 如果这个命令没有高亮，你可以用鼠标选择它. 这可能需要等待几秒钟，由 Package Control 获取可用的插件清单.
 
-1. When the plugin list appears, type `eslint`. Among the entries you should see `SublimeLinter-contrib-eslint`. If that entry is not highlighted, use the keyboard or mouse to select it.
+1. 当插件清单出现，输入 `eslint`. 你会看到 `SublimeLinter-contrib-eslint`.如果该选择没有高亮（选中），你可以用鼠标选择.
 
-## Settings
-For general information on how SublimeLinter works with settings, please see [Settings][settings]. For information on generic linter settings, please see [Linter Settings][linter-settings].
+## 设置
+关于SublimeLinter设置运行的一般信息, 参考 [设置][settings]. 有关校验设置的信息, 参考 [Linter Settings][linter-settings].
 
-You can configure `eslint` options in the way you would from the command line, with `.eslintrc` files. For more information, see the [eslint docs](https://github.com/nzakas/eslint/wiki).
+你可以配置 `eslint` 选项通过命令行, 使用 `.eslintrc` 文件.更多信息, 阅读 [eslint docs](https://github.com/nzakas/eslint/wiki).
 
-## FAQ and Troubleshooting
+## 问题
 
-##### I've got 'SublimeLinter: ERROR: eslint cannot locate 'eslint' in ST console when I try to use locally installed `eslint`.
+##### 我得到 'SublimeLinter: ERROR: eslint cannot locate 'eslint' in ST console ，当我尝试局部安装 `eslint`.
 
-You **must** have `package.json` file if install `eslint` locally. Also, restart project or ST itself after to make sure SublimeLinter uses correct `eslint` instance.
+你 **必须** 存在 `package.json` 文件，如果局部安装 `eslint` . 另外,重启项目或 ST，保证使用正确的 `eslint` 实例.
 
 ```
 npm init -f
 npm install eslint
 ```
 
-##### Plugin still does not work or there are errors in ST console.
+##### 插件仍然无法工作 或者 ST console出现错误.
 
-Update `eslint` instance, probably you use outdated version and SublimeLinter does not check it properly sometimes.
+升级 `eslint` 实例, 可能你使用了过期版本而 SublimeLinter 有时没有正确检查.
 
-##### I want plugin to use my `.eslintignore` settings.
+##### 我希望插件使用 `.eslintignore` 配置.
 
-It does it now.
+可以的.
 
-##### I want not to lint files if there is no `.eslintrc` file in project folder (for ESLint <1.0.0).
+##### 当 `.eslintrc` 文件不存在时，我希望不使用校验 (for ESLint <1.0.0).
 
-Use `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#reset) option, add it to your SublimeLinter global settings or project `.sublimelinterrc` file as below. Add `--no-reset` option to project `.sublimelinterrc` to overwrite it back.
+使用 `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#reset) 选项, 添加进你的 SublimeLinter 全局 配置 或 项目的 `.sublimelinterrc` 文件，如下. 添加 `--no-reset` 选项到项目 `.sublimelinterrc` 覆盖之.
 
 ```
 {
@@ -82,13 +82,13 @@ Use `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#
 }
 ```
 
-##### I want to use global `.eslintrc` config.
+##### 我希望使用全局的 `.eslintrc` 配置.
 
-Plugin uses the same [configuration hierarchy](http://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy) as `eslint` itself, so add `.eslintrc` to your home directory or ancestor directory of project.
+插件使用相同的[configuration hierarchy](http://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy) as `eslint` 本身, 添加 `.eslintrc` 到你的根目录 或项目的祖先目录.
 
-##### I want to use custom rules, global `.eslintignore` file, etc.
+##### 我希望自定义规则, 全局 `.eslintignore` 文件, etc.
 
-You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-line-interface#options) of `eslint` with `args` key in SublimeLinter configs.
+你可以订阅 **任何** [CLI options](http://eslint.org/docs/user-guide/command-line-interface#options) of `eslint` 带有 `args` key 在 SublimeLinter 配置中.
 
 ```
 {
@@ -103,9 +103,9 @@ You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-
 }
 ```
 
-##### `context.getFilename()` in rule returns relative path.
+##### `context.getFilename()` 返回相对路径.
 
-It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLinter settings:
+这是支持`.eslintignore` 配置的缺陷. 添加你的 SublimeLinter 配置:
 
 ```
 {
@@ -119,31 +119,31 @@ It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLint
 }
 ```
 
-##### Plugin does not lint files in symlinked folders.
+##### 插件不校验带有特殊符号的目录.
 
-It looks like ST/SublimeLinter/ESLint issue. Use solution from previous paragraph, set option `--stdin-filename` to `@`.
+它看似 ST/SublimeLinter/ESLint 问题. 使用前述的方案, 设置 选项 `--stdin-filename` to `@`.
 
-##### There is no `SublimeLinter-contrib-eslint` package to install in Package Control packages list.
+##### 不存在 `SublimeLinter-contrib-eslint` 包，在 使用 Package Control 安装时.
 
-Check if you already have it installed, please.
+请检查你是否已经安装
 
-## Contributing
-If you would like to contribute enhancements or fixes, please do the following:
+## 贡献
+如果你想修复或增强本项目, 请参考如下:
 
-1. Fork the plugin repository.
-1. Hack on a separate topic branch created from the latest `master`.
-1. Commit and push the topic branch.
-1. Make a pull request.
-1. Be patient.  ;-)
+1. Fork 插件仓库.
+1. 从最新的 `master`项目创建新的分支.
+1. 提交合并分支.
+1. 提出合并请求
+1. 耐心等待.  ;-)
 
-Please note that modifications should follow these coding guidelines:
+修改请遵循下面的代码指导:
 
-- Indent is 4 spaces.
-- Code should pass flake8 and pep257 linters.
-- Vertical whitespace helps readability, so don’t be afraid to use it.
-- Please use descriptive variable names, so no abbreviations unless they are very well known.
+- 4空格缩进.
+- 代码通过 flake8 和 pep257 校验.
+- 空行提高可阅读性, 请别担心使用它.
+- 请使用描述性的变量名, 请别缩写，除非大家都知道.
 
-Thank you for helping out!
+感谢你的帮助!
 
 [docs]: http://sublimelinter.readthedocs.org
 [installation]: http://sublimelinter.readthedocs.org/en/latest/installation.html
