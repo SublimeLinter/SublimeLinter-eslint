@@ -127,6 +127,10 @@ It looks like ST/SublimeLinter/ESLint issue. Use solution from previous paragrap
 
 Check if you already have it installed, please.
 
+##### It's not linting for JSX.
+
+Try changing your syntax from JSX to Babel > Javascript. ([ref issue](https://github.com/roadhump/SublimeLinter-eslint/issues/106))
+
 ## Contributing
 If you would like to contribute enhancements or fixes, please do the following:
 
