@@ -131,6 +131,20 @@ Check if you already have it installed, please.
 
 Try changing your syntax from JSX to Babel > Javascript. ([ref issue](https://github.com/roadhump/SublimeLinter-eslint/issues/106))
 
+##### I want to use a specific ESLint executable for each project
+
+You can specify the specific `eslint` executable you want to use in your project file by setting a `cmd` value for the eslint linter.
+
+```
+{
+    "linters": {
+        "eslint": {
+            "cmd": "${project}/node_modules/gruntify-eslint/node_modules/.bin/eslint"
+        }
+    }
+}
+```
+
 ## Contributing
 If you would like to contribute enhancements or fixes, please do the following:
 

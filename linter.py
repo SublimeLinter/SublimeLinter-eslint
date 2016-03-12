@@ -87,6 +87,11 @@ class ESLint(NodeLinter):
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
 
+        settings = NodeLinter.get_view_settings(self)
+
+        if 'cmd' in settings:
+            cmd[cmd.index(self.executable_path)] = settings['cmd']
+
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
             relfilename = self.filename
