@@ -14,7 +14,7 @@ import sublime
 import os
 import re
 import sys
-from SublimeLinter.lint import NodeLinter
+from SublimeLinter.lint import NodeLinter, persist
 
 
 def screen_path(path):
@@ -33,7 +33,7 @@ class ESLint(NodeLinter):
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
               'javascript (jsx)', 'jsx-real', 'Vue Component')
     npm_name = 'eslint'
-    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
+    executable = 'eslint'
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 1.0.0'
@@ -106,3 +106,38 @@ class ESLint(NodeLinter):
             cmd.append(screen_path(self.filename))
 
         return super().communicate(cmd, code)
+
+    def cmd(self):
+        """Determine the command that should be executed."""
+
+        settings = NodeLinter.get_view_settings(self)
+
+        # use command in settings if defined
+        if 'cmd' in settings:
+            command = [settings['cmd']]
+
+        else:
+            path = self.context_sensitive_executable_path([self.executable])
+
+            # use command as determined by NodeLinter
+            if path[1]:
+                command = [path[1]]
+
+            else:
+                # fall back to the executable and disable the linter since an executable
+                # could not be found
+                command = [self.executable]
+                setattr(self, 'disabled', True)
+                persist.printf(
+                    'ERROR: {} disabled: could not launch {}'
+                    .format(self.name, self.executable)
+                )
+
+        # apply default command arguments
+        command.append('--format')
+        command.append('compact')
+        command.append('--stdin')
+        command.append('--stdin-filename')
+        command.append('__RELATIVE_TO_FOLDER__')
+
+        return command
