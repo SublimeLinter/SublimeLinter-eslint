@@ -1,0 +1,15 @@
+# SublimeLinter-eslint
+
+v1.10.0
+
+Allow for explicitly defined per-project executables.
+
+```
+{
+    "linters": {
+        "eslint": {
+            "cmd": "${project}/node_modules/gruntify-eslint/node_modules/.bin/eslint"
+        }
+    }
+}
+```
