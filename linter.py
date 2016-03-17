@@ -16,9 +16,6 @@ import re
 from SublimeLinter.lint import NodeLinter
 
 
-    """Make to use path with parentheses on windows while it does not fix in ST itself."""
-
-
 class ESLint(NodeLinter):
 
     """Provides an interface to the eslint executable."""
