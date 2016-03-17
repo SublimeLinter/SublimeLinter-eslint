@@ -13,17 +13,10 @@
 import sublime
 import os
 import re
-import sys
 from SublimeLinter.lint import NodeLinter
 
 
-def screen_path(path):
     """Make to use path with parentheses on windows while it does not fix in ST itself."""
-
-    if sys.platform in ('win32'):
-        return '"' + path + '"'
-    else:
-        return path
 
 
 class ESLint(NodeLinter):
@@ -100,9 +93,9 @@ class ESLint(NodeLinter):
                 if 'folder' in vars:
                     relfilename = os.path.relpath(self.filename, vars['folder'])
 
-            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = screen_path(relfilename)
+            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
 
         elif not code:
-            cmd.append(screen_path(self.filename))
+            cmd.append(self.filename)
 
         return super().communicate(cmd, code)
