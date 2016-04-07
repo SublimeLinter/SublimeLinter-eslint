@@ -21,6 +21,18 @@ Or install `eslint` locally in your project folder (**you must have package.json
     npm install eslint
     ```
 
+1. Init `eslint` config if you don't have any. Run in your code folder:
+
+    ```
+    eslint --init
+    ```
+
+    or if `eslint` is installed locally
+
+    ```
+    ./node_modules/.bin/eslint --init
+    ```
+
 Reopen your project next (or restart ST) to make sure local `eslint` will be used.
 
 1. If you are using `nvm` and `zsh`, ensure that the line to load `nvm` is in `.zprofile` and not `.zshrc`.
@@ -31,7 +43,7 @@ Once `eslint` is installed, you must ensure it is in your system PATH so that Su
 
 Once you have installed `eslint` you can proceed to install the SublimeLinter-eslint plugin if it is not yet installed.
 
-**Note:** This plugin requires `eslint` 0.20.0 or later.
+**Note:** This plugin requires `eslint` 1.0.0 or later.
 
 ### Plugin installation
 Please use [Package Control][pc] to install the linter plugin. This will ensure that the plugin will be updated when new versions are available. If you want to install from source so you can modify the source code, you probably know what you are doing so we won’t cover that here.
@@ -49,6 +61,19 @@ You can configure `eslint` options in the way you would from the command line, w
 
 ## FAQ and Troubleshooting
 
+##### What is my first step to find out what trouble I have?
+
+Use SublimeText console and SublimeLinter debug mode.
+
+1. Check `Tools -> SublimeLinter -> Debug Mode`.
+2. Open console `View -> Show Console`.
+
+Then open any JS file and run `Tools -> SublimeLinter -> Lint This View`. It must be an output in console after, something like that:
+
+```
+SublimeLinter: eslint: 1.js ['/Projects/sample/node_modules/.bin/eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@'] 
+```
+
 ##### I've got 'SublimeLinter: ERROR: eslint cannot locate 'eslint' in ST console when I try to use locally installed `eslint`.
 
 You **must** have `package.json` file if install `eslint` locally. Also, restart project or ST itself after to make sure SublimeLinter uses correct `eslint` instance.
@@ -62,15 +87,63 @@ npm install eslint
 
 Update `eslint` instance, probably you use outdated version and SublimeLinter does not check it properly sometimes.
 
+##### There are no errors in console, but plugin does nothing.
+
+ESLint >2.0.0 does not enable any default rules and you should have config file for your code. Run in your console:
+```
+eslint --init # if eslint is global
+./node_modules/.bin/eslint --init # if eslint is installed locally
+```
+
 ##### I want plugin to use my `.eslintignore` settings.
 
-It does it now.
+~~It does it now.~~
+
+###### For ESLint <2.0.0
+
+Add to your SublimeLinter settings (global or per-project):
+
+```json
+{
+    "linters": {
+        "eslint": {
+            "args": [
+                "--stdin-filename", "__RELATIVE_TO_FOLDER__"
+            ]
+        }
+    }
+}
+```
+
+It can limit some rules and probably cause some bugs (i.e. files in symlinked folders can be skipped).
+
+###### For ESLint >=2.0.0 or if previous solution can't be applied
+
+Duplicate ESLint ignore settings to your `.sublimelinterrc` file. Use double stars for correct match.
+
+```json
+{
+    "linters": {
+        "eslint": {
+            "excludes": [
+                "**/node_modules/**",
+                "**/vendor/**"
+            ]
+        }
+    }
+}
+
+```
+
+###### For ESLint >=2.0.0
+
+If you use a SublimeText project and `.sublime-project` file is in project folder, set `chdir` to `${project}` in your SublimeLinter settings. **Warning:** it can cause bugs if your project has more than one root folder.
 
 ##### I want not to lint files if there is no `.eslintrc` file in project folder (for ESLint <1.0.0).
 
 Use `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#reset) option, add it to your SublimeLinter global settings or project `.sublimelinterrc` file as below. Add `--no-reset` option to project `.sublimelinterrc` to overwrite it back.
 
-```
+```json
 {
     "linters": {
         "eslint": {
@@ -90,7 +163,7 @@ Plugin uses the same [configuration hierarchy](http://eslint.org/docs/user-guide
 
 You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-line-interface#options) of `eslint` with `args` key in SublimeLinter configs.
 
-```
+```json
 {
     "linters": {
         "eslint": {
@@ -102,26 +175,6 @@ You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-
     }
 }
 ```
-
-##### `context.getFilename()` in rule returns relative path.
-
-It is a drawback of supporting `.eslintignore` settings. Add to your SublimeLinter settings:
-
-```
-{
-    "linters": {
-        "eslint": {
-            "args": [
-                "--stdin-filename", "@"
-            ]
-        }
-    }
-}
-```
-
-##### Plugin does not lint files in symlinked folders.
-
-It looks like ST/SublimeLinter/ESLint issue. Use solution from previous paragraph, set option `--stdin-filename` to `@`.
 
 ##### There is no `SublimeLinter-contrib-eslint` package to install in Package Control packages list.
 
