@@ -1,0 +1,5 @@
+# SublimeLinter-eslint
+
+v1.10.0
+
+Return `--stdin-filename` to full path by default. It was made because ESLint >=2.0.0 does not work with current `.eslintignore` integration with plugin. See README for solutions to make `.eslintignore` work now.
