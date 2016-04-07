@@ -23,7 +23,7 @@ class ESLint(NodeLinter):
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
               'javascript (jsx)', 'jsx-real', 'Vue Component', 'vue')
     npm_name = 'eslint'
-    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
+    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 1.0.0'
