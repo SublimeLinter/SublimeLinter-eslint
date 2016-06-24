@@ -24,6 +24,8 @@ class ESLint(NodeLinter):
               'javascript (jsx)', 'jsx-real', 'Vue Component', 'vue')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
+    inline_overrides = ('--ignore-path')
+    config_file = ('--ignore-path', '.eslintignore', '~')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 1.0.0'
