@@ -22,6 +22,7 @@ class ESLint(NodeLinter):
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
               'javascript (jsx)', 'jsx-real', 'Vue Component', 'vue')
+    can_fixed_syntax = ('javascript', 'javascriptnext', 'javascript (babel)')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
     version_args = '--version'
@@ -97,5 +98,13 @@ class ESLint(NodeLinter):
 
         elif not code:
             cmd.append(self.filename)
+
+        if '--fix' in cmd:
+            if self.syntax in self.can_fixed_syntax:
+                '--stdin' in cmd and cmd.remove('--stdin')
+                '--stdin-filename' in cmd and cmd.remove('--stdin-filename')
+                code = None
+            else
+                cmd.remove('--fix')
 
         return super().communicate(cmd, code)
