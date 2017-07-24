@@ -104,7 +104,7 @@ class ESLint(NodeLinter):
                 '--stdin' in cmd and cmd.remove('--stdin')
                 '--stdin-filename' in cmd and cmd.remove('--stdin-filename')
                 code = None
-            else
+            else:
                 cmd.remove('--fix')
 
         return super().communicate(cmd, code)
