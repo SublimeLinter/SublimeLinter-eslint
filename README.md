@@ -59,6 +59,8 @@ For general information on how SublimeLinter works with settings, please see [Se
 
 You can configure `eslint` options in the way you would from the command line, with `.eslintrc` files. For more information, see the [eslint docs](https://github.com/nzakas/eslint/wiki).
 
+SublimeLinter-eslint has its own special settings for controlling things such as whether to use a local or global linter, regardless of the presence of `package.json`. Check out settings in `SublimeLinter-eslint.sublime-settings`.
+
 ## FAQ and Troubleshooting
 
 ##### What is my first step to find out what trouble I have?

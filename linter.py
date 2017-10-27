@@ -80,6 +80,10 @@ class ESLint(NodeLinter):
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
 
+        config = sublime.load_settings('SublimeLinter-eslint.sublime-settings')
+        if config.get('use_global_linter'):
+            cmd = list(ESLint.cmd)
+
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
             relfilename = self.filename
