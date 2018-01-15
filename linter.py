@@ -21,7 +21,7 @@ class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
-              'javascript (jsx)', 'jsx-real', 'Vue Component', 'vue')
+              'javascript (jsx)', 'json', 'jsx-real', 'Vue Component', 'vue')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
     version_args = '--version'
