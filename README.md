@@ -137,7 +137,7 @@ Duplicate ESLint ignore settings to your `.sublimelinterrc` file. Use double sta
 
 ###### For ESLint >=2.0.0
 
-If you use a SublimeText project and `.sublime-project` file is in project folder, set `chdir` to `${project}` in your SublimeLinter settings. **Warning:** it can cause bugs if your project has more than one root folder.
+If you use a SublimeText project and `.sublime-project` file is in project folder, set `chdir` to `${folder}` in your SublimeLinter settings. **Warning:** it can cause bugs if your project has more than one root folder.
 
 ##### I want not to lint files if there is no `.eslintrc` file in project folder (for ESLint <1.0.0).
 
