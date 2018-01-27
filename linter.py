@@ -13,15 +13,25 @@
 import sublime
 import os
 import re
-from SublimeLinter.lint import NodeLinter
+
+from SublimeLinter.lint import NodeLinter, persist
 
 
 class ESLint(NodeLinter):
 
     """Provides an interface to the eslint executable."""
 
-    syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
-              'javascript (jsx)', 'json', 'jsx-real', 'Vue Component', 'vue')
+    _base_syntax_list = [
+        'javascript', 'html', 'javascriptnext', 'javascript (babel)',
+        'javascript (jsx)', 'json', 'jsx-real', 'Vue Component', 'vue'
+    ]
+    defaults = {
+        'extra_syntaxes': []
+    }
+
+    # report that we support every syntax, so users can specify their own
+    syntax = '*'
+
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
     version_args = '--version'
@@ -30,7 +40,7 @@ class ESLint(NodeLinter):
     regex = (
         r'^.+?: line (?P<line>\d+), col (?P<col>\d+), '
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
-        r'(?P<message>.+)'
+        r'(?P<message>.*(?P<near>\'.+\'|\".+\").*)'
     )
     config_fail_regex = re.compile(r'^Cannot read config file: .*\r?\n')
     crash_regex = re.compile(
@@ -43,13 +53,27 @@ class ESLint(NodeLinter):
         'vue': 'source.js.embedded.html'
     }
 
+    @classmethod
+    def can_lint_syntax(cls, syntax):
+        """
+        Override so we can get additional syntaxes via user settings.
+        """
+        extra_syntaxes = cls.lint_settings.get('extra_syntaxes', [])
+        if not isinstance(extra_syntaxes, list) or all(isinstance(s, str) for s in extra_syntaxes):
+            persist.printf("Error: Invalid setting for 'extra_settings'. Must be a list of syntax names.")
+            extra_syntaxes = []
+        supported_syntaxes = cls._base_syntax_list + extra_syntaxes
+        if syntax.lower() in (s.lower() for s in supported_syntaxes):
+            if cls.executable_path != '':
+                return True
+        return False
+
     def find_errors(self, output):
         """
         Parse errors from linter's output.
 
         We override this method to handle parsing eslint crashes.
         """
-
         match = self.config_fail_regex.match(output)
         if match:
             return [(match, 0, None, "Error", "", match.group(0), None)]
