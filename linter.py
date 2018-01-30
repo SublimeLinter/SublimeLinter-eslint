@@ -54,18 +54,22 @@ class ESLint(NodeLinter):
     }
 
     @classmethod
-    def can_lint_syntax(cls, syntax):
+    def can_lint(cls, syntax):
         """
         Override so we can get additional syntaxes via user settings.
         """
-        extra_syntaxes = cls.lint_settings.get('extra_syntaxes', [])
-        if not isinstance(extra_syntaxes, list) or all(isinstance(s, str) for s in extra_syntaxes):
+
+        extra_syntaxes = cls.settings().get('extra_syntaxes', [])
+        if not isinstance(extra_syntaxes, list) or not all(isinstance(s, str) for s in extra_syntaxes):
             persist.printf("Error: Invalid setting for 'extra_settings'. Must be a list of syntax names.")
             extra_syntaxes = []
         supported_syntaxes = cls._base_syntax_list + extra_syntaxes
+
         if syntax.lower() in (s.lower() for s in supported_syntaxes):
             if cls.executable_path != '':
                 return True
+        else:
+            persist.debug("{} not in {}".format(syntax.lower(), [s.lower() for s in supported_syntaxes]))
         return False
 
     def find_errors(self, output):
