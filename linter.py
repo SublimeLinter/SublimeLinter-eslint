@@ -32,10 +32,13 @@ class ESLint(NodeLinter):
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
         r'(?P<message>.+)'
     )
-    config_fail_regex = re.compile(r'^Cannot read config file: .*\r?\n')
+    config_fail_regex = re.compile(
+        r'.*(ESLint couldn\'t find a configuration file)',
+        re.DOTALL
+    )
     crash_regex = re.compile(
-        r'^(.*?)\r?\n\w*Error: \1',
-        re.MULTILINE
+        r'^(.*?)\r?\n\w*(Oops! Something went wrong!)',
+        re.DOTALL
     )
     line_col_base = (1, 1)
     selectors = {
@@ -52,12 +55,10 @@ class ESLint(NodeLinter):
 
         match = self.config_fail_regex.match(output)
         if match:
-            return [(match, 0, None, "Error", "", match.group(0), None)]
-
+            return [(match, 0, None, "", "config", match.group(1), None)]
         match = self.crash_regex.match(output)
         if match:
-            msg = "ESLint crashed: %s" % match.group(1)
-            return [(match, 0, None, "Error", "", msg, None)]
+            return [(match, 0, None, "exception", "", match.group(2), None)]
 
         return super().find_errors(output)
 
