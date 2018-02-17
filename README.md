@@ -39,11 +39,9 @@ Reopen your project next (or restart ST) to make sure local `eslint` will be use
 
 1. If you are using `zsh` and `oh-my-zsh`, do not load the `nvm` plugin for `oh-my-zsh`.
 
-Once `eslint` is installed, you must ensure it is in your system PATH so that SublimeLinter can find it. This may not be as straightforward as you think, so please read about [how linter executables are located][locating-executables] in the documentation.
-
 Once you have installed `eslint` you can proceed to install the SublimeLinter-eslint plugin if it is not yet installed.
 
-**Note:** This plugin requires `eslint` 1.0.0 or later.
+**Note:** This plugin requires `eslint` 2.0.0 or later.
 
 ### Plugin installation
 Please use [Package Control][pc] to install the linter plugin. This will ensure that the plugin will be updated when new versions are available. If you want to install from source so you can modify the source code, you probably know what you are doing so we won’t cover that here.
@@ -71,7 +69,7 @@ Use SublimeText console and SublimeLinter debug mode.
 Then open any JS file and run `Tools -> SublimeLinter -> Lint This View`. It must be an output in console after, something like that:
 
 ```
-SublimeLinter: eslint: 1.js ['/Projects/sample/node_modules/.bin/eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@'] 
+SublimeLinter: eslint: 1.js ['/Projects/sample/node_modules/.bin/eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@']
 ```
 
 ##### I've got 'SublimeLinter: ERROR: eslint cannot locate 'eslint' in ST console when I try to use locally installed `eslint`.
@@ -86,78 +84,6 @@ npm install eslint
 ##### Plugin still does not work or there are errors in ST console.
 
 Update `eslint` instance, probably you use outdated version and SublimeLinter does not check it properly sometimes.
-
-##### There are no errors in console, but plugin does nothing.
-
-ESLint >2.0.0 does not enable any default rules and you should have config file for your code. Run in your console:
-```
-eslint --init # if eslint is global
-./node_modules/.bin/eslint --init # if eslint is installed locally
-```
-
-##### I want plugin to use my `.eslintignore` settings.
-
-~~It does it now.~~
-
-###### For ESLint <2.0.0
-
-Add to your SublimeLinter settings (global or per-project):
-
-```json
-{
-    "linters": {
-        "eslint": {
-            "args": [
-                "--stdin-filename", "__RELATIVE_TO_FOLDER__"
-            ]
-        }
-    }
-}
-```
-
-It can limit some rules and probably cause some bugs (i.e. files in symlinked folders can be skipped).
-
-###### For ESLint >=2.0.0 or if previous solution can't be applied
-
-Duplicate ESLint ignore settings to your `.sublimelinterrc` file. Use double stars for correct match.
-
-```json
-{
-    "linters": {
-        "eslint": {
-            "excludes": [
-                "**/node_modules/**",
-                "**/vendor/**"
-            ]
-        }
-    }
-}
-
-```
-
-###### For ESLint >=2.0.0
-
-If you use a SublimeText project and `.sublime-project` file is in project folder, set `chdir` to `${folder}` in your SublimeLinter settings. **Warning:** it can cause bugs if your project has more than one root folder.
-
-##### I want not to lint files if there is no `.eslintrc` file in project folder (for ESLint <1.0.0).
-
-Use `--reset` [ESLint](http://eslint.org/docs/user-guide/command-line-interface#reset) option, add it to your SublimeLinter global settings or project `.sublimelinterrc` file as below. Add `--no-reset` option to project `.sublimelinterrc` to overwrite it back.
-
-```json
-{
-    "linters": {
-        "eslint": {
-            "args": [
-                "--reset"
-            ]
-        }
-    }
-}
-```
-
-##### I want to use global `.eslintrc` config.
-
-Plugin uses the same [configuration hierarchy](http://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy) as `eslint` itself, so add `.eslintrc` to your home directory or ancestor directory of project.
 
 ##### I want to use custom rules, global `.eslintignore` file, etc.
 
