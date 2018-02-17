@@ -10,8 +10,6 @@
 
 """This module exports the ESLint plugin class."""
 
-import sublime
-import os
 import re
 from SublimeLinter.lint import NodeLinter
 
@@ -70,25 +68,3 @@ class ESLint(NodeLinter):
             return match, None, None, None, None, '', None
 
         return match, line, col, error, warning, message, near
-
-    def communicate(self, cmd, code=None):
-        """Run an external executable using stdin to pass code and return its output."""
-        if '__RELATIVE_TO_FOLDER__' in cmd:
-
-            relfilename = self.filename
-            window = self.view.window()
-
-            # can't get active folder, it will work only if there is one folder in project
-            if int(sublime.version()) >= 3080 and len(window.folders()) < 2:
-
-                vars = window.extract_variables()
-
-                if 'folder' in vars:
-                    relfilename = os.path.relpath(self.filename, vars['folder'])
-
-            cmd[cmd.index('__RELATIVE_TO_FOLDER__')] = relfilename
-
-        elif not code:
-            cmd.append(self.filename)
-
-        return super().communicate(cmd, code)
