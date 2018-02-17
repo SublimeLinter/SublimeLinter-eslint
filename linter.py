@@ -17,7 +17,6 @@ from SublimeLinter.lint import NodeLinter
 
 
 class ESLint(NodeLinter):
-
     """Provides an interface to the eslint executable."""
 
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
@@ -51,7 +50,6 @@ class ESLint(NodeLinter):
 
         We override this method to handle parsing eslint crashes.
         """
-
         match = self.config_fail_regex.match(output)
         if match:
             return [(match, 0, None, "", "config", match.group(1), None)]
@@ -67,7 +65,6 @@ class ESLint(NodeLinter):
 
         We override this method to silent warning by .eslintignore settings.
         """
-
         v1message = 'File ignored because of your .eslintignore file. Use --no-ignore to override.'
         v2message = 'File ignored because of a matching ignore pattern. Use --no-ignore to override.'
 
@@ -79,7 +76,6 @@ class ESLint(NodeLinter):
 
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
-
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
             relfilename = self.filename
