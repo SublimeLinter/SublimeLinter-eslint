@@ -19,8 +19,7 @@ from SublimeLinter.lint import NodeLinter
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
-              'javascript (jsx)', 'json', 'jsx-real', 'vue component', 'vue')
+    syntax = ('javascript', 'html', 'json')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
     version_args = '--version'
