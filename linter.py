@@ -21,7 +21,7 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    syntax = ('javascript', 'html', 'json')
+    syntax = ('javascript', 'html')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
 
