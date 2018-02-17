@@ -52,16 +52,12 @@ class ESLint(NodeLinter):
         return super().find_errors(output)
 
     def split_match(self, match):
-        """
-        Extract and return values from match.
+        """Extract and return values from match.
 
-        We override this method to silent warning by .eslintignore settings.
+        Return 'no match' for ignored files
         """
-        v1message = 'File ignored because of your .eslintignore file. Use --no-ignore to override.'
-        v2message = 'File ignored because of a matching ignore pattern. Use --no-ignore to override.'
-
         match, line, col, error, warning, message, near = super().split_match(match)
-        if message and (message == v1message or message == v2message):
+        if message and message.startswith('File ignored'):
             return match, None, None, None, None, '', None
 
         return match, line, col, error, warning, message, near
