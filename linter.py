@@ -10,8 +10,12 @@
 
 """This module exports the ESLint plugin class."""
 
+import logging
 import re
 from SublimeLinter.lint import NodeLinter
+
+
+logger = logging.getLogger('SublimeLinter.plugin.eslint')
 
 
 class ESLint(NodeLinter):
@@ -26,10 +30,6 @@ class ESLint(NodeLinter):
         r'(?:(?P<error>Error)|(?P<warning>Warning)) - '
         r'(?P<message>.+)'
     )
-    config_fail_regex = re.compile(
-        r'.*(ESLint couldn\'t find a configuration file)',
-        re.DOTALL
-    )
     crash_regex = re.compile(
         r'^(.*?)\r?\n\w*(Oops! Something went wrong!)',
         re.DOTALL
@@ -40,17 +40,14 @@ class ESLint(NodeLinter):
     }
 
     def find_errors(self, output):
-        """
-        Parse errors from linter's output.
+        """Parse errors from linter's output.
 
-        We override this method to handle parsing eslint crashes.
+        Log errors when eslint crashes or can't find its configuration.
         """
-        match = self.config_fail_regex.match(output)
-        if match:
-            return [(match, 0, None, "", "config", match.group(1), None)]
         match = self.crash_regex.match(output)
         if match:
-            return [(match, 0, None, "exception", "", match.group(2), None)]
+            logger.error(output)
+            return []
 
         return super().find_errors(output)
 
