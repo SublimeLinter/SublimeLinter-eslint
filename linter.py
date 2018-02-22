@@ -45,6 +45,21 @@ class ESLint(NodeLinter):
         'html': 'source.js.embedded.html'
     }
 
+    def __init__(self, view, syntax):
+        """Initialize a new NodeLinter instance."""
+        super(ESLint, self).__init__(view, syntax)
+
+        # Now we have the package.json, if any
+        if self.manifest_path:
+            pkg = self.get_manifest()
+            # If eslint-html-plugin is specified, we assume it is in use and
+            # disable our own html selectors.
+            if (('dependencies' in pkg and
+                 'eslint-plugin-html' in pkg['dependencies']) or
+                ('dependencies' in pkg and
+                 'eslint-plugin-html' in pkg['devDependencies'])):
+                self.selectors.pop('html')
+
     def find_errors(self, output):
         """
         Parse errors from linter's output.
