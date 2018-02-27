@@ -44,6 +44,7 @@ class ESLint(NodeLinter):
     selectors = {
         'html': 'source.js.embedded.html'
     }
+    multiline = True
 
     def find_errors(self, output):
         """
