@@ -21,7 +21,6 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    syntax = ('javascript', 'html')
     npm_name = 'eslint'
     cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '@')
 
@@ -35,8 +34,8 @@ class ESLint(NodeLinter):
         re.DOTALL
     )
     line_col_base = (1, 1)
-    selectors = {
-        'html': 'source.js.embedded.html'
+    defaults = {
+        'selector': 'source.js - meta.attribute-with-value'
     }
 
     def find_errors(self, output):
