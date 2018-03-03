@@ -102,7 +102,7 @@ You can specify **any** [CLI options](http://eslint.org/docs/user-guide/command-
 }
 ```
 
-##### There is no `SublimeLinter-contrib-eslint` package to install in Package Control packages list.
+##### There is no `SublimeLinter-eslint` package to install in Package Control packages list.
 
 Check if you already have it installed, please.
 
