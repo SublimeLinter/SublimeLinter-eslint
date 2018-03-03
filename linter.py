@@ -35,7 +35,7 @@ class ESLint(NodeLinter):
     )
     line_col_base = (1, 1)
     defaults = {
-        'selector': 'source.js - meta.attribute-with-value, text.html.basic'
+        'selector': 'source.js - meta.attribute-with-value'
     }
 
     def find_errors(self, output):
