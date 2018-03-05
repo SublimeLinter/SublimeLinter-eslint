@@ -1,50 +1,39 @@
-SublimeLinter-eslint 4.0.1
---------------------------
+SublimeLinter-eslint 4.0.1 [BREAKING!]
+--------------------------------------
+
+We switched to the new SL4 selectors. Which are awesome.
+
+This replaces the old syntax_map as a ways to get this to work with "vue"
+or the "eslint-plugin-html", or even with "Javascript (babel, next)" etc.
+
+By default, this plugin will now *only* select "source.js",
+which should work with most vue/babel/next flavors and embedded code.
+
+It's also configurable. Open your SublimeLinter settings and set it to e.g.:
+
+    "eslint": {
+        "selector": "source.js, text.html.basic"
+    }
 
 
-[BREAKING] again. We switched to the new SL4 selectors. What does that mean?
-The whole `syntax` stuff and how I get this to work with `vue` or the
-`eslint-plugin-html`, or even with "Javascript (super-next, next)" has been revisited.
-
-By default, this plugin will now *only* select `source.js`
-marked code, so it also lints embedded code in html.
-
-But this is finally pluggable. Go to your settings, the User settings or
-project settings, and set it to e.g.:
-
-```
-  "eslint": {
-    "selector": "source.js, text.html.basic"
-  }
-
-```
-
-*iff* you have the `eslint-plugin-html` installed. Then the plugin will take
-the whole file, not just the scripts tags and pass it to eslint.
-
-Want it to grab `vue` files: "source.js, text.html.vue" for the win.
+With the `eslint-plugin-html` installed, it will then take the whole file,
+not just the scripts tags, and pass it to eslint.
+Want it to grab `vue` files? "source.js, text.html.vue" for the win.
 
 
-Enhancement:
+Other enhancements:
 
-- We show errors that spread over multiple lines on ... multiple lines!
-  So, if you have an empty if block, we select the block not the if.
+- We highlight errors that spread over multiple lines on ... multiple lines!
+  So, if you have an empty "if" block, we highlight the entire block.
 
+- You can target different node version by setting, e.g.:
+    "executable": ["nvm", "exec", "8.9", "path/to/eslint"]
+    "executable": ["i/compiled/this/node", "path/to/eslint"]
 
-Tips and tricks:
-
-You can target different node version by setting, e.g.:
-
-  `"executable": ["nvm", "exec", "8.9", "path/to/eslint"]`
-
-  `"executable": ["i/compiled/this/node", "path/to/eslint"]`
-
-
-You can tweak the execution environment:
-
-  `"env": {
-    "PATH": "/some/additional/path/bin:$PATH"
-  }`
+- You can tweak the execution environment by setting, e.g.:
+    "env": {
+        "PATH": "/some/additional/path/bin:$PATH"
+    }
 
 
 
