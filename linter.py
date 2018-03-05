@@ -44,7 +44,11 @@ class ESLint(NodeLinter):
             logger.error(output)
             return
 
-        content = json.loads(output)
+        try:
+            content = json.loads(output)
+        except ValueError:
+            logger.error(output)
+            return
 
         if logger.isEnabledFor(logging.INFO):
             import pprint
