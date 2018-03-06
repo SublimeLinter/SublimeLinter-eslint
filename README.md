@@ -44,6 +44,15 @@ npm init -f
 npm install eslint
 ```
 
+### I've got 'SublimeLinter: eslint ERROR: ESLint couldn't find a configuration file' when I am editing a Javascript file.
 
+If using SublimeLinter 4.x or later, the linter is trying to always lint the current view, even if there is no eslint setup for the project or file. You can easily fix this error by creating an empty `.eslintrc` file in your home directory. This file will be picked up by the linter when there is **no** locally-defined ESLint configuration.
 
+```bash
+cd $HOME # or cd %HOMEPATH% on Windows
+touch .eslintrc
+echo '{ "rules": {} }' > .eslintrc
+```
+
+You can of course use your editor of choice and create this file.
 
