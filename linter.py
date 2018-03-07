@@ -44,10 +44,14 @@ class ESLint(NodeLinter):
             logger.error(output)
             return
 
+        # SL core concats STDOUT and STDERR. The json we're after is
+        # on STDOUT. `lstrip` here is defensive.
+        stdout = output.lstrip().splitlines()[0]
+
         try:
-            content = json.loads(output)
+            content = json.loads(stdout)
         except ValueError:
-            logger.error(output)
+            logger.error(output)  # still log complete output!
             return
 
         if logger.isEnabledFor(logging.INFO):
