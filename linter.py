@@ -64,10 +64,15 @@ class ESLint(NodeLinter):
                 if match['message'].startswith('File ignored'):
                     continue
 
+                column = match.get('column', None)
+                if column is not None:
+                    # apply line_col_base manually
+                    column = column - 1
+
                 yield (
                     match,
                     match['line'] - 1,  # apply line_col_base manually
-                    match['column'] - 1,
+                    column,
                     match['ruleId'] if match['severity'] == 2 else '',
                     match['ruleId'] if match['severity'] == 1 else '',
                     match['message'],
@@ -76,9 +81,12 @@ class ESLint(NodeLinter):
 
     def reposition_match(self, line, col, m, vv):
         match = m.match
-        if match.get('fatal', False):  # parse error
+        if (
+            col is None or
+            match.get('fatal', False)  # parse error
+        ):
             text = vv.select_line(line)
-            return line, 0, len(text)  # select whole line?
+            return line, 0, len(text)  # select whole line
             return super().reposition_match(line, col, m, vv)
 
         # apply line_col_base manually
