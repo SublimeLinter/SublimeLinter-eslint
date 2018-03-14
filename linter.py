@@ -65,6 +65,7 @@ class ESLint(NodeLinter):
                     continue
 
                 column = match.get('column', None)
+                ruleId = match.get('ruleId', '')
                 if column is not None:
                     # apply line_col_base manually
                     column = column - 1
@@ -73,8 +74,8 @@ class ESLint(NodeLinter):
                     match,
                     match['line'] - 1,  # apply line_col_base manually
                     column,
-                    match['ruleId'] if match['severity'] == 2 else '',
-                    match['ruleId'] if match['severity'] == 1 else '',
+                    ruleId if match['severity'] == 2 else '',
+                    ruleId if match['severity'] == 1 else '',
                     match['message'],
                     None  # near
                 )
