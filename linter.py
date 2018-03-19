@@ -84,16 +84,14 @@ class ESLint(NodeLinter):
         match = m.match
         if (
             col is None or
-            match.get('fatal', False)  # parse error
+            'endLine' not in match or
+            'endColumn' not in match
         ):
-            text = vv.select_line(line)
-            return line, 0, len(text)  # select whole line
             return super().reposition_match(line, col, m, vv)
 
         # apply line_col_base manually
-        end_line = match.get('endLine', line + 1) - 1
-        # to ensure a length of 1, add 2 to the starting col
-        end_column = match.get('endColumn', col + 2) - 1
+        end_line = match['endLine'] - 1
+        end_column = match['endColumn'] - 1
 
         for _line in range(line, end_line):
             text = vv.select_line(_line)
