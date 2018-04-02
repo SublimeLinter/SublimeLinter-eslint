@@ -6,7 +6,7 @@ This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeL
 ## Installation
 SublimeLinter 3 must be installed in order to use this plugin. 
 
-Please install via [Package Control](https://sublime.wbond.net/installation).
+Please install via [Package Control](https://packagecontrol.io).
 
 Before using this plugin, you must ensure that `eslint` is installed on your system. To install `eslint`, do the following:
 
@@ -26,8 +26,8 @@ npm install eslint
 
 ## Settings
 
-- SublimeLinter settings: http://sublimelinter.readthedocs.org/en/latest/settings.html
-- Linter settings: http://sublimelinter.readthedocs.org/en/latest/linter_settings.html
+- SublimeLinter settings: http://sublimelinter.com/en/latest/settings.html
+- Linter settings: http://sublimelinter.com/en/latest/linter_settings.html
 
 You can configure `eslint` options in the way you would from the command line, with `.eslintrc` files. For more information, see the [eslint docs](https://github.com/nzakas/eslint/wiki).
 
