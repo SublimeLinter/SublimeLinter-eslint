@@ -23,7 +23,7 @@ class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
     npm_name = 'eslint'
-    cmd = ('eslint', '--format', 'json', '--stdin', '--stdin-filename', '@')
+    cmd = 'eslint --format json --stdin --stdin-filename ${file}'
 
     crash_regex = re.compile(
         r'^(.*?)\r?\n\w*(Oops! Something went wrong!)',
