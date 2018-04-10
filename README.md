@@ -24,6 +24,20 @@ npm install -g eslint
 npm install eslint
 ```
 
+## Using eslint with plugins (e.g. vue)
+
+If you're using plugins for eslint so that it can lint files other than `.js`, 
+you need to tell SublimeLinter it's ok to lint those files too.
+For this you can change the `"selector"` setting to include the scope
+of the other syntax. For [vue](https://vuejs.org) this would be:
+
+```json
+"linters": {
+    "eslint": {
+        "selector": "text.html.vue, source.js - meta.attribute-with-value"
+    }
+}
+```
 
 ## Settings
 
