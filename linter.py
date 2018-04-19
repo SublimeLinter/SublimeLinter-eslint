@@ -50,10 +50,7 @@ class ESLint(NodeLinter):
             self.notify_failure()
 
     def find_errors(self, output):
-        """Parse errors from linter's output.
-
-        Log errors when eslint crashes or can't find its configuration.
-        """
+        """Parse errors from linter's output."""
         try:
             content = json.loads(output)
         except ValueError:
