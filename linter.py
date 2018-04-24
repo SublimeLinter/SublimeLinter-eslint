@@ -98,3 +98,11 @@ class ESLint(NodeLinter):
             end_column += len(text)
 
         return line, col, end_column
+
+    def run(self, cmd, code):
+        # Workaround eslint bug https://github.com/eslint/eslint/issues/9515
+        # Fixed in eslint 4.10.0
+        if code == '':
+            code = ' '
+
+        return super().run(cmd, code)
