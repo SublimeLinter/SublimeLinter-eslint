@@ -38,15 +38,15 @@ class ESLint(NodeLinter):
         'selector': 'source.js - meta.attribute-with-value'
     }
 
-    def on_stderr(self, output):
+    def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
-        if self.missing_config_regex.match(output):
-            logger.warning(output)
+        if self.missing_config_regex.match(stderr):
+            logger.warning(stderr)
             self.notify_failure()
-        elif 'in the next version' in output:  # is that a proper deprecation?
-            logger.warning(output)
+        elif 'in the next version' in stderr:  # is that a proper deprecation?
+            logger.warning(stderr)
         else:
-            logger.error(output)
+            logger.error(stderr)
             self.notify_failure()
 
     def find_errors(self, output):
