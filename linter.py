@@ -54,7 +54,7 @@ class ESLint(NodeLinter):
         try:
             content = json.loads(output)
         except ValueError:
-            logger.error(output)  # still log complete output!
+            logger.error('{} output:\n{}'.format(self.name, output))
             self.notify_failure()
             return
 
