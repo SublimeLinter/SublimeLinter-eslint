@@ -25,6 +25,10 @@ class ESLint(NodeLinter):
     npm_name = 'eslint'
     cmd = 'eslint --format json --stdin --stdin-filename ${file}'
 
+    missing_config_regex = re.compile(
+        r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
+        re.DOTALL
+    )
     crash_regex = re.compile(
         r'^(.*?)\r?\n\w*(Oops! Something went wrong!)',
         re.DOTALL
@@ -34,24 +38,24 @@ class ESLint(NodeLinter):
         'selector': 'source.js - meta.attribute-with-value'
     }
 
+    def on_stderr(self, stderr):
+        # Demote 'annoying' config is missing error to a warning.
+        if self.missing_config_regex.match(stderr):
+            logger.warning(stderr)
+            self.notify_failure()
+        elif 'in the next version' in stderr:  # is that a proper deprecation?
+            logger.warning(stderr)
+        else:
+            logger.error(stderr)
+            self.notify_failure()
+
     def find_errors(self, output):
-        """Parse errors from linter's output.
-
-        Log errors when eslint crashes or can't find its configuration.
-        """
-        match = self.crash_regex.match(output)
-        if match:
-            logger.error(output)
-            return
-
-        # SL core concats STDOUT and STDERR. The json we're after is
-        # on STDOUT. `lstrip` here is defensive.
-        stdout = output.lstrip().splitlines()[0]
-
+        """Parse errors from linter's output."""
         try:
-            content = json.loads(stdout)
+            content = json.loads(output)
         except ValueError:
-            logger.error(output)  # still log complete output!
+            logger.error('{} output:\n{}'.format(self.name, output))
+            self.notify_failure()
             return
 
         if logger.isEnabledFor(logging.INFO):
