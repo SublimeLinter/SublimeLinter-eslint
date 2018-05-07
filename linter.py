@@ -29,10 +29,6 @@ class ESLint(NodeLinter):
         r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
         re.DOTALL
     )
-    crash_regex = re.compile(
-        r'^(.*?)\r?\n\w*(Oops! Something went wrong!)',
-        re.DOTALL
-    )
     line_col_base = (1, 1)
     defaults = {
         'selector': 'source.js - meta.attribute-with-value'
