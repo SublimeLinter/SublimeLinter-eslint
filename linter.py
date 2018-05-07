@@ -43,7 +43,10 @@ class ESLint(NodeLinter):
         if self.missing_config_regex.match(stderr):
             logger.warning(stderr)
             self.notify_failure()
-        elif 'in the next version' in stderr:  # is that a proper deprecation?
+        elif (
+            'DeprecationWarning' in stderr or
+            'in the next version' in stderr  # is that a proper deprecation?
+        ):
             logger.warning(stderr)
         else:
             logger.error(stderr)
