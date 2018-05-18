@@ -41,6 +41,7 @@ class ESLint(NodeLinter):
             self.notify_failure()
         elif (
             'DeprecationWarning' in stderr or
+            'ExperimentalWarning' in stderr or
             'in the next version' in stderr  # is that a proper deprecation?
         ):
             logger.warning(stderr)
