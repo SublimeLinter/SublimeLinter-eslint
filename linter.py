@@ -14,6 +14,10 @@ import json
 import logging
 import os
 import re
+
+import sublime
+import sublime_plugin
+
 from SublimeLinter.lint import NodeLinter
 
 
@@ -23,9 +27,6 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    npm_name = 'eslint'
-    cmd = 'eslint --format json --stdin --stdin-filename ${file}'
-
     missing_config_regex = re.compile(
         r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
         re.DOTALL
@@ -33,8 +34,26 @@ class ESLint(NodeLinter):
     line_col_base = (1, 1)
     defaults = {
         'selector': 'source.js - meta.attribute-with-value',
-        'filter_fixables': False
+        'filter_fixables': False,
+        'fix_on_save': False
     }
+
+    def should_lint(self, reason):
+        self.reason = reason
+        return super().should_lint(reason)
+
+    def cmd(self):
+        if self.should_attempt_fix():
+            return 'eslint --fix-dry-run --format json --stdin --stdin-filename ${file}'
+
+        return 'eslint --format json --stdin --stdin-filename ${file}'
+
+    def should_attempt_fix(self):
+        return (
+            self.get_view_settings().get('fix_on_save') and
+            self.reason == 'on_save' and
+            self.view.score_selector(0, 'source.js')
+        )
 
     def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
@@ -76,6 +95,9 @@ class ESLint(NodeLinter):
 
         filter_fixables = self.get_view_settings().get('filter_fixables')
         for entry in content:
+            if 'output' in entry:
+                self.replace_buffer_content(entry['output'])
+
             for match in entry['messages']:
                 if match['message'].startswith('File ignored'):
                     continue
@@ -98,6 +120,10 @@ class ESLint(NodeLinter):
                     match['message'],
                     None  # near
                 )
+
+    def replace_buffer_content(self, content):
+        self.view.run_command(
+            'sl_eslint_replace_buffer_content', {'text': content})
 
     def reposition_match(self, line, col, m, vv):
         match = m.match
@@ -125,3 +151,8 @@ class ESLint(NodeLinter):
             code = ' '
 
         return super().run(cmd, code)
+
+
+class sl_eslint_replace_buffer_content(sublime_plugin.TextCommand):
+    def run(self, edit, text):
+        self.view.replace(edit, sublime.Region(0, self.view.size()), text)
