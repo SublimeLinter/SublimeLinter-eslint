@@ -32,7 +32,8 @@ class ESLint(NodeLinter):
     )
     line_col_base = (1, 1)
     defaults = {
-        'selector': 'source.js - meta.attribute-with-value'
+        'selector': 'source.js - meta.attribute-with-value',
+        'filter_fixables': False
     }
 
     def on_stderr(self, stderr):
@@ -73,9 +74,13 @@ class ESLint(NodeLinter):
             logger.info(
                 '{} output:\n{}'.format(self.name, pprint.pformat(content)))
 
+        filter_fixables = self.get_view_settings().get('filter_fixables')
         for entry in content:
             for match in entry['messages']:
                 if match['message'].startswith('File ignored'):
+                    continue
+
+                if filter_fixables and 'fix' in match:
                     continue
 
                 column = match.get('column', None)
