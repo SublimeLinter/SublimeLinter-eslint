@@ -59,7 +59,8 @@ class ESLint(NodeLinter):
             logger.error(
                 "JSON Decode error: We expected JSON from 'eslint', "
                 "but instead got this:\n{}\n\n"
-                "Be aware to not log additional info to stdout.".format(output))
+                "Be aware that we only parse the last line of above "
+                "output.".format(output))
             self.notify_failure()
             return
 
