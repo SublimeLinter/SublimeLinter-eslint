@@ -53,6 +53,10 @@ class ESLint(NodeLinter):
     def find_errors(self, output):
         """Parse errors from linter's output."""
         try:
+            # It is possible that users output debug messages to stdout, so we
+            # only parse the last line, which is hopefully the actual eslint
+            # output.
+            # https://github.com/SublimeLinter/SublimeLinter-eslint/issues/251
             last_line = output.rstrip().split(os.linesep)[-1]
             content = json.loads(last_line)
         except ValueError:
