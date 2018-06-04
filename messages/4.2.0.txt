@@ -1,0 +1,10 @@
+SublimeLinter-eslint 4.2.0
+--------------------------
+
+We can *fix* that!  We have two new settings:
+
+- "filter_fixables" (true|false): If set to true, the plugin will ignore
+  errors/warnings which are fixable.
+
+- "fix_on_save" (true|false): If set to true, will attempt to auto-fix
+  the source file. This is for pure '.js' files only atm.
