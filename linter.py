@@ -53,8 +53,8 @@ class ESLint(NodeLinter):
     def find_errors(self, output):
         """Parse errors from linter's output."""
         try:
-            output_json = output.rstrip().split(os.linesep)[-1]
-            content = json.loads(output_json)
+            last_line = output.rstrip().split(os.linesep)[-1]
+            content = json.loads(last_line)
         except ValueError:
             logger.error(
                 "JSON Decode error: We expected JSON from 'eslint', "
