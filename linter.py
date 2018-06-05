@@ -18,7 +18,8 @@ import re
 import sublime
 import sublime_plugin
 
-from SublimeLinter.lint import NodeLinter
+from SublimeLinter import sublime_linter
+from SublimeLinter.lint import backend, linter, NodeLinter, util
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -43,17 +44,10 @@ class ESLint(NodeLinter):
         return super().should_lint(reason)
 
     def cmd(self):
-        if self.should_attempt_fix():
+        if self.reason == 'attempt_fix':
             return 'eslint --fix-dry-run --format json --stdin --stdin-filename ${file}'
 
         return 'eslint --format json --stdin --stdin-filename ${file}'
-
-    def should_attempt_fix(self):
-        return (
-            self.get_view_settings().get('fix_on_save') and
-            self.reason == 'on_save' and
-            self.view.score_selector(0, 'source.js')
-        )
 
     def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
@@ -151,6 +145,43 @@ class ESLint(NodeLinter):
             code = ' '
 
         return super().run(cmd, code)
+
+
+class AutoFixController(sublime_plugin.EventListener):
+    def on_pre_save(self, view):
+        view.run_command('sublime_linter_fix_eslint', {'on_save': True})
+
+
+class sublime_linter_fix_eslint(sublime_plugin.TextCommand):
+    def is_enabled(self, on_save=False):
+        view = self.view
+
+        if not util.is_lintable(view):
+            return False
+
+        if not view.score_selector(0, 'source.js'):
+            return False
+
+        settings = linter.get_linter_settings(ESLint, view)
+        if on_save and not settings.get('fix_on_save'):
+            return False
+
+        if not ESLint.can_lint_view(view, settings):
+            return False
+
+        return True
+
+    def run(self, edit, on_save=False):
+        view = self.view
+        settings = linter.get_linter_settings(ESLint, view)
+        eslint = ESLint(view, settings)
+        eslint.reason = 'attempt_fix'
+
+        view_has_changed = sublime_linter.make_view_has_changed_fn(view)
+        _, tasks = next(
+            backend.get_lint_tasks([eslint], view, view_has_changed))
+        task = tasks[0]
+        task()
 
 
 class sl_eslint_replace_buffer_content(sublime_plugin.TextCommand):
