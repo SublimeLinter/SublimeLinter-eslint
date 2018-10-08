@@ -4,4 +4,4 @@ This linter plugin for SublimeLinter provides an interface to ESLint.
 
 Please read the installation instructions at:
 
-https://github.com/roadhump/SublimeLinter-eslint
+https://github.com/SublimeLinter/SublimeLinter-eslint
