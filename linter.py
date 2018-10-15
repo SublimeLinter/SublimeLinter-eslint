@@ -57,7 +57,7 @@ class ESLint(NodeLinter):
             # only parse the last line, which is hopefully the actual eslint
             # output.
             # https://github.com/SublimeLinter/SublimeLinter-eslint/issues/251
-            last_line = output.rstrip().split(os.linesep)[-1]
+            last_line = output.rstrip().split('\n')[-1]
             content = json.loads(last_line)
         except ValueError:
             logger.error(
