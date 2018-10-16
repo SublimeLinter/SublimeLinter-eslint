@@ -12,7 +12,6 @@
 
 import json
 import logging
-import os
 import re
 from SublimeLinter.lint import NodeLinter
 
