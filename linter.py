@@ -31,7 +31,7 @@ class ESLint(NodeLinter):
     )
     line_col_base = (1, 1)
     defaults = {
-        'selector': 'source.js - meta.attribute-with-value'
+        'selector': 'source.js - meta.attribute-with-value - text.html.markdown'
     }
 
     def on_stderr(self, stderr):
