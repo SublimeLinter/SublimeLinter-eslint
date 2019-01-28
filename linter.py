@@ -40,9 +40,9 @@ class ESLint(NodeLinter):
             logger.warning(stderr)
             self.notify_failure()
         elif (
-            'DeprecationWarning' in stderr or
-            'ExperimentalWarning' in stderr or
-            'in the next version' in stderr  # is that a proper deprecation?
+            'DeprecationWarning' in stderr
+            or 'ExperimentalWarning' in stderr
+            or 'in the next version' in stderr  # is that a proper deprecation?
         ):
             logger.warning(stderr)
         else:
@@ -96,9 +96,9 @@ class ESLint(NodeLinter):
     def reposition_match(self, line, col, m, vv):
         match = m.match
         if (
-            col is None or
-            'endLine' not in match or
-            'endColumn' not in match
+            col is None
+            or 'endLine' not in match
+            or 'endColumn' not in match
         ):
             return super().reposition_match(line, col, m, vv)
 
