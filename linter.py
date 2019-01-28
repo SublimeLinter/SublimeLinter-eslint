@@ -14,6 +14,7 @@ import json
 import logging
 import re
 from SublimeLinter.lint import NodeLinter
+from SublimeLinter.lint.linter import LintMatch
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -33,6 +34,20 @@ class ESLint(NodeLinter):
     defaults = {
         'selector': 'source.js - meta.attribute-with-value'
     }
+
+    def should_lint(self, reason=None):
+        self.reason = reason
+        return super().should_lint(reason)
+
+    def cmd(self):
+        if (
+            self.reason in ("on_user_request", "on_save")
+            and self.settings.context.get('file', None)
+        ):
+            self.tempfile_suffix = '-'
+            return 'eslint --format json ${xoo:.}'
+        else:
+            return 'eslint --format json --stdin --stdin-filename ${file}'
 
     def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
@@ -83,14 +98,14 @@ class ESLint(NodeLinter):
                     # apply line_col_base manually
                     column = column - 1
 
-                yield (
-                    match,
-                    match['line'] - 1,  # apply line_col_base manually
-                    column,
-                    ruleId if match['severity'] == 2 else '',
-                    ruleId if match['severity'] == 1 else '',
-                    match['message'],
-                    None  # near
+                yield LintMatch(
+                    filename=entry['filePath'],
+                    match=match,
+                    line=match['line'] - 1,  # apply line_col_base manually
+                    col=column,
+                    error_type='error' if match['severity'] == 2 else 'warning',
+                    code=ruleId,
+                    message=match['message'],
                 )
 
     def reposition_match(self, line, col, m, vv):
