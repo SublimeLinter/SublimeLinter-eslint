@@ -13,7 +13,7 @@
 import json
 import logging
 import re
-from SublimeLinter.lint import NodeLinter
+from SublimeLinter.lint import NodeLinter, LintMatch
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -73,24 +73,27 @@ class ESLint(NodeLinter):
                 '{} output:\n{}'.format(self.name, pprint.pformat(content)))
 
         for entry in content:
+            filename = entry.get('filePath', None)
+            if filename == '<text>':
+                filename = 'stdin'
+
             for match in entry['messages']:
                 if match['message'].startswith('File ignored'):
                     continue
 
                 column = match.get('column', None)
-                ruleId = match.get('ruleId', '')
                 if column is not None:
                     # apply line_col_base manually
                     column = column - 1
 
-                yield (
-                    match,
-                    match['line'] - 1,  # apply line_col_base manually
-                    column,
-                    ruleId if match['severity'] == 2 else '',
-                    ruleId if match['severity'] == 1 else '',
-                    match['message'],
-                    None  # near
+                yield LintMatch(
+                    match=match,
+                    filename=filename,
+                    line=match['line'] - 1,  # apply line_col_base manually
+                    col=column,
+                    error_type='error' if match['severity'] == 2 else 'warning',
+                    code=match.get('ruleId', ''),
+                    message=match['message'],
                 )
 
     def reposition_match(self, line, col, m, vv):
