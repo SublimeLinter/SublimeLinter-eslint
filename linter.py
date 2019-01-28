@@ -13,7 +13,12 @@
 import json
 import logging
 import re
-from SublimeLinter.lint import NodeLinter
+
+import sublime
+import sublime_plugin
+
+from SublimeLinter import sublime_linter
+from SublimeLinter.lint import backend, linter, NodeLinter, util
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -22,17 +27,26 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    npm_name = 'eslint'
-    cmd = 'eslint --format json --stdin --stdin-filename ${file}'
-
     missing_config_regex = re.compile(
         r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
         re.DOTALL
     )
     line_col_base = (1, 1)
     defaults = {
-        'selector': 'source.js - meta.attribute-with-value'
+        'selector': 'source.js - meta.attribute-with-value',
+        'filter_fixables': False,
+        'fix_on_save': False
     }
+
+    def should_lint(self, reason):
+        self.reason = reason
+        return super().should_lint(reason)
+
+    def cmd(self):
+        if self.reason == 'attempt_fix':
+            return 'eslint --fix-dry-run --format json --stdin --stdin-filename ${file}'
+
+        return 'eslint --format json --stdin --stdin-filename ${file}'
 
     def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
@@ -72,9 +86,16 @@ class ESLint(NodeLinter):
             logger.info(
                 '{} output:\n{}'.format(self.name, pprint.pformat(content)))
 
+        filter_fixables = self.get_view_settings().get('filter_fixables')
         for entry in content:
+            if 'output' in entry:
+                self.replace_buffer_content(entry['output'])
+
             for match in entry['messages']:
                 if match['message'].startswith('File ignored'):
+                    continue
+
+                if filter_fixables and 'fix' in match:
                     continue
 
                 column = match.get('column', None)
@@ -92,6 +113,10 @@ class ESLint(NodeLinter):
                     match['message'],
                     None  # near
                 )
+
+    def replace_buffer_content(self, content):
+        self.view.run_command(
+            'sl_eslint_replace_buffer_content', {'text': content})
 
     def reposition_match(self, line, col, m, vv):
         match = m.match
@@ -119,3 +144,45 @@ class ESLint(NodeLinter):
             code = ' '
 
         return super().run(cmd, code)
+
+
+class AutoFixController(sublime_plugin.EventListener):
+    def on_pre_save(self, view):
+        view.run_command('sublime_linter_fix_eslint', {'on_save': True})
+
+
+class sublime_linter_fix_eslint(sublime_plugin.TextCommand):
+    def is_enabled(self, on_save=False):
+        view = self.view
+
+        if not util.is_lintable(view):
+            return False
+
+        if not view.score_selector(0, 'source.js'):
+            return False
+
+        settings = linter.get_linter_settings(ESLint, view)
+        if on_save and not settings.get('fix_on_save'):
+            return False
+
+        if not ESLint.can_lint_view(view, settings):
+            return False
+
+        return True
+
+    def run(self, edit, on_save=False):
+        view = self.view
+        settings = linter.get_linter_settings(ESLint, view)
+        eslint = ESLint(view, settings)
+        eslint.reason = 'attempt_fix'
+
+        view_has_changed = sublime_linter.make_view_has_changed_fn(view)
+        _, tasks = next(
+            backend.get_lint_tasks([eslint], view, view_has_changed))
+        task = tasks[0]
+        task()
+
+
+class sl_eslint_replace_buffer_content(sublime_plugin.TextCommand):
+    def run(self, edit, text):
+        self.view.replace(edit, sublime.Region(0, self.view.size()), text)

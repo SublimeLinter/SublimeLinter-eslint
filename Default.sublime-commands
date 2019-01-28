@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "SublimeLinter: Fix eslint",
+        "command": "sublime_linter_fix_eslint"
+    }
+]
