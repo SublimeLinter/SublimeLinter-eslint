@@ -56,12 +56,11 @@ class ESLint(NodeLinter):
         else:
             return True, None
 
-    def paths_upwards_until_home(self, path):
-        home = os.path.expanduser('~')
+    def paths_upwards(self, path):
         while True:
             yield path
             next_path = os.path.dirname(path)
-            if next_path == home:
+            if next_path == path:
                 return
             path = next_path
 
@@ -95,14 +94,14 @@ class ESLint(NodeLinter):
         # Check if we have eslint config in package.json
         if self.has_config_in_manifest():
             config_found = True
-        for path in self.paths_upwards_until_home(start_dir):
+        for path in self.paths_upwards(start_dir):
             node_modules_bin = os.path.join(path, 'node_modules', '.bin')
             executable = shutil.which(npm_name, path=node_modules_bin)
             if not config_found:
                 # Look for eslint config in current directory
                 config_found = self.has_local_config(path)
-            if executable and config_found:
-                return executable
+            if executable:
+                return executable if config_found else None
         else:
             return None
 
