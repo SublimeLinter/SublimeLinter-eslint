@@ -85,22 +85,22 @@ class ESLint(NodeLinter):
                 return True
         return False
 
-    def has_config_in_manifest(self):
-        if self.manifest_path:
-            pkg = self.get_manifest()
-            if 'eslintConfig' in pkg:
-                return True
-        return False
-
     def find_local_linter(self, start_dir, npm_name='eslint'):
         """
         Find local installation of eslint executable
         and return it only if a local config is found.
         """
         config_found = False
-        # Check if we have eslint config in package.json
-        if self.has_config_in_manifest():
-            config_found = True
+        # Check if we have eslint config or executable in package.json
+        if self.manifest_path:
+            pkg = self.get_manifest()
+            pkg_dir = os.path.dirname(self.manifest_path)
+            cmd = pkg['bin'][npm_name] if 'bin' in pkg and npm_name in pkg['bin'] else None
+            if cmd:
+                executable = os.path.normpath(os.path.join(pkg_dir, cmd))
+            if 'eslintConfig' in pkg:
+                config_found = True
+
         for path in self.paths_upwards(start_dir):
             node_modules_bin = os.path.join(path, 'node_modules', '.bin')
             executable = shutil.which(npm_name, path=node_modules_bin)
