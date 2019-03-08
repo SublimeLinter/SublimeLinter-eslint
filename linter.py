@@ -13,7 +13,9 @@
 import json
 import logging
 import re
-from SublimeLinter.lint import NodeLinter
+import os
+import shutil
+from SublimeLinter.lint import NodeLinter, util
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -33,6 +35,76 @@ class ESLint(NodeLinter):
     defaults = {
         'selector': 'source.js - meta.attribute-with-value'
     }
+
+    def context_sensitive_executable_path(self, cmd):
+        """
+        Use local eslint only if both local eslint executable and
+        local config is found. Fallback to global eslint if exists.
+        """
+        start_dir = (
+            # absolute path of current file
+            os.path.abspath(os.path.dirname(self.view.file_name()))
+            # or current working directory
+            or self.get_working_dir(self.settings)
+        )
+        local_cmd = self.find_local_linter(start_dir)
+        global_cmd = util.which(cmd[0])
+        if local_cmd:
+            return True, local_cmd
+        elif global_cmd:
+            return True, global_cmd
+        else:
+            return True, None
+
+    def paths_upwards_until_home(self, path):
+        home = os.path.expanduser('~')
+        while True:
+            yield path
+            next_path = os.path.dirname(path)
+            if next_path == home:
+                return
+            path = next_path
+
+    def has_local_config(self, path):
+        eslint_files = [
+            ".eslintrc.js",
+            ".eslintrc.yaml",
+            ".eslintrc.yml",
+            ".eslintrc.json",
+            ".eslintrc",
+        ]
+        # Check for existence of config files in current directory
+        for config_file in eslint_files:
+            if os.path.exists(os.path.join(path, config_file)):
+                return True
+        return False
+
+    def has_config_in_manifest(self):
+        if self.manifest_path:
+            pkg = self.get_manifest()
+            if 'eslintConfig' in pkg:
+                return True
+        return False
+
+    def find_local_linter(self, start_dir, npm_name='eslint'):
+        """
+        Find local installation of eslint executable
+        and return it only if a local config is found.
+        """
+        config_found = False
+        # Check if we have eslint config in package.json
+        if self.has_config_in_manifest():
+            config_found = True
+        for path in self.paths_upwards_until_home(start_dir):
+            node_modules_bin = os.path.join(path, 'node_modules', '.bin')
+            executable = shutil.which(npm_name, path=node_modules_bin)
+            if not config_found:
+                # Look for eslint config in current directory
+                config_found = self.has_local_config(path)
+            if executable and config_found:
+                return executable
+        else:
+            return None
 
     def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
