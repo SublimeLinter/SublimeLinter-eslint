@@ -48,12 +48,19 @@ class ESLint(NodeLinter):
             or self.get_working_dir(self.settings)
         )
         local_cmd = self.find_local_linter(start_dir)
-        global_cmd = util.which(cmd[0])
         if local_cmd:
             return True, local_cmd
-        elif global_cmd:
+
+        if self.get_view_settings().get('disable_if_not_dependency', False):
+            return True, None
+
+        global_cmd = util.which(cmd[0])
+        if global_cmd:
             return True, global_cmd
         else:
+            logger.warning('{} cannot locate \'{}\'\n'
+                           'Please refer to the readme of this plugin and our troubleshooting guide: '
+                           'http://www.sublimelinter.com/en/stable/troubleshooting.html'.format(self.name, cmd[0]))
             return True, None
 
     def paths_upwards(self, path):
