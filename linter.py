@@ -22,7 +22,6 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    npm_name = 'eslint'
     cmd = 'eslint --format json --stdin'
 
     missing_config_regex = re.compile(
