@@ -23,7 +23,7 @@ class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
     npm_name = 'eslint'
-    cmd = 'eslint --format json --stdin --stdin-filename ${file}'
+    cmd = 'eslint --format json --stdin'
 
     missing_config_regex = re.compile(
         r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
@@ -31,7 +31,8 @@ class ESLint(NodeLinter):
     )
     line_col_base = (1, 1)
     defaults = {
-        'selector': 'source.js - meta.attribute-with-value'
+        'selector': 'source.js - meta.attribute-with-value',
+        '--stdin-filename': '${file}'
     }
 
     def on_stderr(self, stderr):
