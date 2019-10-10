@@ -89,7 +89,7 @@ class ESLint(NodeLinter):
                 yield LintMatch(
                     match=match,
                     filename=filename,
-                    line=match['line'] - 1,  # apply line_col_base manually
+                    line=match.get('line', 1) - 1,  # apply line_col_base manually
                     col=column,
                     error_type='error' if match['severity'] == 2 else 'warning',
                     code=match.get('ruleId', ''),
