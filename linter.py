@@ -89,6 +89,7 @@ class ESLint(NodeLinter):
                 if 'line' not in match:
                     logger.error(match['message'])
                     self.notify_failure()
+                    continue
 
                 yield LintMatch(
                     match=match,
