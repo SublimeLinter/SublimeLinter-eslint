@@ -28,7 +28,21 @@ npm install eslint
 If you're using plugins for eslint so that it can lint files other than `.js`, 
 you need to tell SublimeLinter it's ok to lint those files too.
 For this you can change the `"selector"` setting to include the scope
-of the other syntax. For [Vue.js](https://vuejs.org/) `.vue` files it would be:
+of the other syntax. Its default value is `source.js - meta.attribute-with-value`, 
+make sure to include that in the configuration.
+
+For [Typescript](https://www.typescriptlang.org/) `.ts` files it would be:
+
+```json
+"linters": {
+    "eslint": {
+        "selector": "source.ts, source.js - meta.attribute-with-value"
+    }
+}
+```
+It would also need the appropriate [eslint-plugin](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin) setup.
+
+For [Vue.js](https://vuejs.org/) `.vue` files it would be:
 
 ```json
 "linters": {
@@ -43,7 +57,7 @@ For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte3
 ```json
 "linters": {
     "eslint": {
-        "selector": "text.html"
+        "selector": "text.html, source.js - meta.attribute-with-value"
     }
 }
 ```
