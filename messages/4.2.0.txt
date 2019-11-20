@@ -1,0 +1,29 @@
+SublimeLinter-eslint 4.2.0
+--------------------------
+
+BREAKING CHANGE! BREAKING CHANGE! BREAKING CHANGE! BREAKING CHANGE!
+
+This plugin used to lint only JavaScript out of the box. But eslint can do
+more using plugins. These plugins are extremely useful and popular, and we
+want to support them *automatically*.
+
+In this first release, we detect ts, html, json, vue, and svelte.
+Other plugins/languages can be added. Please open an issue/PR!
+
+Note that the plugins have to be installed *locally*, alongside with eslint
+itself, for this to work. So-called *global* installations have to be
+configured manually, since eslint v6 anyway.
+
+
+# No, thanks, I want the old behavior
+
+You can restore the old behavior by setting `selector` to its old value:
+
+```json
+"linters": {
+    "eslint": {
+        "selector": "source.js - meta.attribute-with-value"
+    }
+}
+```
+
