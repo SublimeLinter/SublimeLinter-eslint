@@ -1,7 +1,7 @@
 SublimeLinter-eslint
 =========================
 
-This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides an interface to [ESLint](https://github.com/nzakas/eslint). It will be used with files that have the "JavaScript" or "HTML 5" syntax dependent on your installed syntax highlighting package.
+This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides an interface to [ESLint](https://github.com/nzakas/eslint). It will be used with "JavaScript" files, but since `eslint` is pluggable, it can actually lint a variety of other files as well.
 
 ## Installation
 SublimeLinter 3 must be installed in order to use this plugin. 
@@ -20,16 +20,21 @@ npm install -g eslint
     
 - Or install `eslint` locally in your project folder (**you must have a `package.json` file there**):
 ```
-npm install eslint
+npm install -S eslint
 ```
 
 ## Using eslint with plugins (e.g. vue)
 
-If you're using plugins for eslint so that it can lint files other than `.js`, 
-you need to tell SublimeLinter it's ok to lint those files too.
-For this you can change the `"selector"` setting to include the scope
-of the other syntax. Its default value is `source.js - meta.attribute-with-value`, 
-make sure to include that in the configuration.
+SublimeLinter will detect _some_ installed **local** plugins, and thus it should work automatically for e.g. `.vue` or `.ts` files. If it works on the command line, there is a chance it works in Sublime without further ado.  
+
+- Make sure the plugins are installed **locally** colocated to `eslint` itself. T.i., technically, both `eslint` and its plugins are described in the very same `package.json`. 
+- Configuration of the plugins is out-of-scope of this README. Be sure to read _their_ README's as well. (If you just installed a plugin, without proper configuration, `eslint` will probably show error messages or wrong lint results, and SublimeLinter will just pass them to you.)
+
+Out-of-the-box SublimeLinter detects typescript, vue, svelte, html, and json. Please open a PR for important other plugins. 
+
+In any case, if you want to control which files SublimeLinter sends to `eslint`, you can always manually change the `"selector"` setting to just include the scopes you explicitly want. The default value for "JavaScript" is `source.js - meta.attribute-with-value`, make sure to include that in the configuration. 
+
+### Examples
 
 For [Typescript](https://www.typescriptlang.org/) `.ts` files it would be:
 
@@ -40,7 +45,6 @@ For [Typescript](https://www.typescriptlang.org/) `.ts` files it would be:
     }
 }
 ```
-It would also need the appropriate [eslint-plugin](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin) setup.
 
 For [Vue.js](https://vuejs.org/) `.vue` files it would be:
 
@@ -73,6 +77,18 @@ You can configure `eslint` options in the way you would from the command line, w
 
 
 ## FAQ and Troubleshooting
+
+### `eslint` doesn't lint my HTML files anymore.
+
+Starting with v4.2 of this plugin, `eslint` will only lint '*.js' files for standard, vanilla configurations without further plugins. You can restore the old behavior by setting `selector` to its old value: 
+
+```json
+"linters": {
+    "eslint": {
+        "selector": "source.js - meta.attribute-with-value"
+    }
+}
+```
 
 ### I've got 'SublimeLinter: ERROR: eslint cannot locate 'eslint' in ST console when I try to use locally installed `eslint`.
 
