@@ -26,10 +26,11 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 
 STANDARD_SELECTOR = 'source.js'
 PLUGINS = {
+    'eslint-plugin-html': 'text.html',
+    'eslint-plugin-json': 'source.json',
     'eslint-plugin-svelte3': 'text.html',
     'eslint-plugin-vue': 'text.html.vue',
-    'eslint-plugin-json': 'source.json',
-    'eslint-plugin-html': 'text.html'
+    '@typescript-eslint/parser': 'source.ts',
 }
 OPTIMISTIC_SELECTOR = ', '.join({STANDARD_SELECTOR} | set(PLUGINS.values()))
 
