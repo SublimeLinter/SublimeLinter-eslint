@@ -20,7 +20,7 @@ npm install -g eslint
     
 - Or install `eslint` locally in your project folder (**you must have a `package.json` file there**):
 ```
-npm install -S eslint
+npm install -D eslint
 ```
 
 ## Using eslint with plugins (e.g. vue)
