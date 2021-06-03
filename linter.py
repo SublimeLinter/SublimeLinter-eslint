@@ -24,7 +24,7 @@ from SublimeLinter.lint.base_linter.node_linter import read_json_file
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
 
 
-STANDARD_SELECTOR = 'source.js'
+STANDARD_SELECTOR = 'source.js, source.jsx'
 PLUGINS = {
     'eslint-plugin-html': 'text.html',
     'eslint-plugin-json': 'source.json',
