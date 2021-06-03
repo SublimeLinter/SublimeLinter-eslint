@@ -30,7 +30,7 @@ SublimeLinter will detect _some_ installed **local** plugins, and thus it should
 - Make sure the plugins are installed **locally** colocated to `eslint` itself. T.i., technically, both `eslint` and its plugins are described in the very same `package.json`. 
 - Configuration of the plugins is out-of-scope of this README. Be sure to read _their_ README's as well. (If you just installed a plugin, without proper configuration, `eslint` will probably show error messages or wrong lint results, and SublimeLinter will just pass them to you.)
 
-Out-of-the-box SublimeLinter detects typescript, vue, svelte, html, and json. Please open a PR for important other plugins. Note, however, that when you configure the `exectuable` manually, you also opt-out of the automatic plugin detection and fallback to linting "Javscript" only. 
+Out-of-the-box SublimeLinter detects typescript, vue, svelte, html, and json. Please open a PR for important other plugins. Note, however, that when you configure the `executable` manually, you also opt-out of the automatic plugin detection and fallback to linting "Javscript" only. 
 
 In any case, if you want to control which files SublimeLinter sends to `eslint`, you can always manually change the `"selector"` setting to just include the scopes you explicitly want. The default value for "JavaScript" is `source.js - meta.attribute-with-value`, make sure to include that in the configuration. 
 
