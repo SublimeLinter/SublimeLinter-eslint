@@ -31,6 +31,7 @@ PLUGINS = {
     'eslint-plugin-svelte3': 'text.html',
     'eslint-plugin-vue': 'text.html.vue',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
+    'tsdx': 'source.ts, source.tsx',
 }
 OPTIMISTIC_SELECTOR = ', '.join({STANDARD_SELECTOR} | set(PLUGINS.values()))
 
