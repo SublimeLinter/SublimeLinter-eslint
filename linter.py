@@ -144,11 +144,6 @@ class ESLint(NodeLinter):
                 if match['message'].startswith('File ignored'):
                     continue
 
-                column = match.get('column', None)
-                if column is not None:
-                    # apply line_col_base manually
-                    column = column - 1
-
                 if 'line' not in match:
                     logger.error(match['message'])
                     self.notify_failure()
@@ -158,27 +153,17 @@ class ESLint(NodeLinter):
                     match=match,
                     filename=filename,
                     line=match['line'] - 1,  # apply line_col_base manually
-                    col=column,
+                    col=_try(lambda: match['column'] - 1),
+                    end_line=_try(lambda: match['endLine'] - 1),
+                    end_col=_try(lambda: match['endColumn'] - 1),
                     error_type='error' if match['severity'] == 2 else 'warning',
                     code=match.get('ruleId', ''),
                     message=match['message'],
                 )
 
-    def reposition_match(self, line, col, m, vv):
-        match = m.match
-        if (
-            col is None
-            or 'endLine' not in match
-            or 'endColumn' not in match
-        ):
-            return super().reposition_match(line, col, m, vv)
 
-        # apply line_col_base manually
-        end_line = match['endLine'] - 1
-        end_column = match['endColumn'] - 1
-
-        for _line in range(line, end_line):
-            text = vv.select_line(_line)
-            end_column += len(text)
-
-        return line, col, end_column
+def _try(getter, otherwise=None, catch=Exception):
+    try:
+        return getter()
+    except catch:
+        return otherwise
