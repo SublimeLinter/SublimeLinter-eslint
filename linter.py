@@ -74,27 +74,43 @@ class ESLint(NodeLinter):
         # If we fallback to a global installation there is no 'project_root',
         # t.i. no auto-selector in that case as well.
         project_root = self.context.get('project_root')
-        if project_root:
-            # We still need to be careful, in case SL deduced a 'project_root'
-            # without checking for the 'package.json' explicitly. Basically, a
-            # happy path for SL core.
-            manifest_file = os.path.join(project_root, 'package.json')
-            try:
-                manifest = read_json_file(manifest_file)
-            except Exception:
-                pass
-            else:
-                defined_plugins = PLUGINS.keys() & (
-                    manifest.get('dependencies', {}).keys()
-                    | manifest.get('devDependencies', {}).keys()
-                )
-                selector = ', '.join(PLUGINS[name] for name in defined_plugins)
-                if selector and self.view.match_selector(0, selector):
-                    return True
+        if not project_root:
+            logger.info("No project_root found.")
+            if 'executable' in self.settings:
+                logger.info(
+                    "If 'executable' is set in settings, 'selector' "
+                    "should also manually be specified.")
+            self.notify_unassign()  # Abort linting without popping error dialog
+            raise PermanentError()
 
-        # Indicate an error which usually can only be solved by changing
-        # the environment. Silently, do not notify and disturb the user.
-        self.notify_unassign()
+        # We still need to be careful, in case SL deduced a 'project_root'
+        # without checking for the 'package.json' explicitly. Basically, a
+        # happy path for SL core.
+        manifest_file = os.path.join(project_root, 'package.json')
+        try:
+            manifest = read_json_file(manifest_file)
+        except Exception as exc:
+            logger.info(
+                "Failed to read package.json at project_root '{}' to determine "
+                "whether or not to eslint this file".format(project_root))
+            logger.info(exc)
+            # Occurs even if file not found, so don't notify
+            self.notify_unassign()  # Abort linting without popping error dialog
+            raise PermanentError()
+
+        defined_plugins = PLUGINS.keys() & (
+            manifest.get('dependencies', {}).keys()
+            | manifest.get('devDependencies', {}).keys()
+        )
+        selector = ', '.join(PLUGINS[name] for name in defined_plugins)
+        if selector and self.view.match_selector(0, selector):
+            return True
+
+        logger.info(
+            "package.json did not contain dependencies or devDependencies "
+            "required to lint this file type. Manually set 'selector' to "
+            "override this behavior, or install the required dependencies.")
+        self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
 
     def on_stderr(self, stderr):
