@@ -14,10 +14,8 @@ import json
 import logging
 import os
 import re
-from SublimeLinter.lint import NodeLinter, LintMatch
+from SublimeLinter.lint import LintMatch, NodeLinter, PermanentError
 
-# TODO Proper export these in SL core
-from SublimeLinter.lint.linter import PermanentError
 from SublimeLinter.lint.base_linter.node_linter import read_json_file
 
 
