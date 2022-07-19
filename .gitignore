@@ -1,5 +1,6 @@
 .DS_Store
 ### /Users/roadhump/.gitignore-boilerplates/Global/SublimeText.gitignore
+.mypy_cache/
 
 # SublimeText project files
 *.sublime-workspace
