@@ -1,0 +1,16 @@
+SublimeLinter-eslint 4.3.0
+--------------------------
+
+SublimeLinter will now prefer a possible `eslint_d` installation (globally or
+locally) over the slower `eslint` binary automatically.
+
+You can control this behavior with the `prefer_eslint_d` setting.  For example,
+to turn this off in the global SublimeLinter settings:
+
+```json
+"linters": {
+    "eslint": {
+        "prefer_eslint_d": false
+    }
+}
+```
