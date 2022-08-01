@@ -68,6 +68,20 @@ For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte3
 
 To find the `selector` value for a particular file type, place the cursor at the start of the file and use the command **Tools** ➡️ **Developer** ➡️ **Show Scope Name**.
 
+## Using eslint_d
+
+This plugin will automatically prefer a `eslint_d` installation if present.
+You can change this behavior by setting `prefer_eslint_d` to `false` either
+globally or per project.  E.g. for the global setting:
+
+```json
+"linters": {
+    "eslint": {
+        "prefer_eslint_d": false
+    }
+}
+```
+
 ## Settings
 
 - SublimeLinter settings: http://sublimelinter.com/en/latest/settings.html
