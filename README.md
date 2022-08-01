@@ -4,7 +4,7 @@ SublimeLinter-eslint
 This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides an interface to [ESLint](https://github.com/nzakas/eslint). It will be used with "JavaScript" files, but since `eslint` is pluggable, it can actually lint a variety of other files as well.
 
 ## Installation
-SublimeLinter 3 must be installed in order to use this plugin. 
+SublimeLinter must be installed in order to use this plugin.
 
 Please install via [Package Control](https://packagecontrol.io).
 
