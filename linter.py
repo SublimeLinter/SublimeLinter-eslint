@@ -28,6 +28,7 @@ PLUGINS = {
     'eslint-plugin-json': 'source.json',
     'eslint-plugin-svelte3': 'text.html',
     'eslint-plugin-vue': 'text.html.vue',
+    '@angular-eslint/eslint-plugin': 'text.html',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
     'tsdx': 'source.ts, source.tsx',
 }
