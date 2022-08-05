@@ -14,9 +14,15 @@ import json
 import logging
 import os
 import re
+import shutil
 from SublimeLinter.lint import LintMatch, NodeLinter, PermanentError
 
 from SublimeLinter.lint.base_linter.node_linter import read_json_file
+
+
+MYPY = False
+if MYPY:
+    from typing import List, Union
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -47,7 +53,8 @@ class ESLint(NodeLinter):
     line_col_base = (1, 1)
     defaults = {
         'selector': OPTIMISTIC_SELECTOR,
-        '--stdin-filename': '${file}'
+        '--stdin-filename': '${file}',
+        'prefer_eslint_d': True,
     }
 
     def run(self, cmd, code):
@@ -112,6 +119,21 @@ class ESLint(NodeLinter):
             "override this behavior, or install the required dependencies.")
         self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
+
+    def find_local_executable(self, start_dir, npm_name):
+        # type: (str, str) -> Union[None, str, List[str]]
+        """Automatically switch to `eslint_d` if available (and wanted)."""
+        executable = super().find_local_executable(start_dir, npm_name)
+        if self.settings.get('prefer_eslint_d') and isinstance(executable, str):
+            basedir = os.path.dirname(executable)
+            daemonized_name = '{}_d'.format(npm_name)
+            return (
+                (shutil.which(daemonized_name, path=basedir) if basedir else None)  # local
+                or self.which(daemonized_name)         # global
+                or executable                          # keep it
+            )
+
+        return executable
 
     def on_stderr(self, stderr):
         # Demote 'annoying' config is missing error to a warning.
