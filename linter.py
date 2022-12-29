@@ -22,7 +22,7 @@ from SublimeLinter.lint.base_linter.node_linter import read_json_file
 
 MYPY = False
 if MYPY:
-    from typing import List, Union
+    from typing import List, Union  # noqa: F401
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -37,8 +37,22 @@ PLUGINS = {
     '@angular-eslint/eslint-plugin': 'text.html',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
     'tsdx': 'source.ts, source.tsx',
+    'eslint-plugin-yml': 'source.yaml',
+    'eslint-plugin-yaml': 'source.yaml',
 }
 OPTIMISTIC_SELECTOR = ', '.join({STANDARD_SELECTOR} | set(PLUGINS.values()))
+
+BUFFER_FILE_STEM = '__buffer__'
+BUFFER_FILE_EXTENSIONS = {
+    'source.js': 'js',
+    'source.jsx': 'jsx',
+    'text.html': 'html',
+    'text.html.vue': 'vue',
+    'source.ts': 'ts',
+    'source.tsx': 'tsx',
+    'source.json': 'json',
+    'source.yaml': 'yaml',
+}
 
 
 class ESLint(NodeLinter):
@@ -53,7 +67,6 @@ class ESLint(NodeLinter):
     line_col_base = (1, 1)
     defaults = {
         'selector': OPTIMISTIC_SELECTOR,
-        '--stdin-filename': '${file}',
         'prefer_eslint_d': True,
     }
 
@@ -64,6 +77,11 @@ class ESLint(NodeLinter):
             code = ' '
 
         self.ensure_plugin_installed()
+
+        stdin_filename = self.get_stdin_filename()
+        if stdin_filename:
+            cmd.append('--stdin-filename=' + stdin_filename)
+
         return super().run(cmd, code)
 
     def ensure_plugin_installed(self) -> bool:
@@ -119,6 +137,15 @@ class ESLint(NodeLinter):
             "override this behavior, or install the required dependencies.")
         self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
+
+    def get_stdin_filename(self) -> str:
+        filename = self.view.file_name()
+        if filename is None:
+            for selector in BUFFER_FILE_EXTENSIONS.keys():
+                if self.view.match_selector(0, selector):
+                    filename = '.'.join([BUFFER_FILE_STEM, BUFFER_FILE_EXTENSIONS[selector]])
+                    break
+        return filename
 
     def find_local_executable(self, start_dir, npm_name):
         # type: (str, str) -> Union[None, str, List[str]]
@@ -176,6 +203,8 @@ class ESLint(NodeLinter):
         for entry in content:
             filename = entry.get('filePath', None)
             if filename == '<text>':
+                filename = 'stdin'
+            elif filename.split(os.path.sep)[-1].split('.')[0] == BUFFER_FILE_STEM:
                 filename = 'stdin'
 
             for match in entry['messages']:
