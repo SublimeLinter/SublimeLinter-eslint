@@ -22,7 +22,7 @@ from SublimeLinter.lint.base_linter.node_linter import read_json_file
 
 MYPY = False
 if MYPY:
-    from typing import List, Union
+    from typing import List, Optional, Union
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -138,7 +138,8 @@ class ESLint(NodeLinter):
         self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
 
-    def get_stdin_filename(self) -> str | None:
+    def get_stdin_filename(self):
+        # type: () -> Optional[str]
         filename = self.view.file_name()
         if filename is None:
             view_selectors = set(self.view.scope_name(0).split(' '))
