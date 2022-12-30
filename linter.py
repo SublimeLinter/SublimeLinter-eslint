@@ -22,7 +22,7 @@ from SublimeLinter.lint.base_linter.node_linter import read_json_file
 
 MYPY = False
 if MYPY:
-    from typing import List, Union  # noqa: F401
+    from typing import List, Union
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -58,8 +58,6 @@ BUFFER_FILE_EXTENSIONS = {
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
-    cmd = 'eslint --format json --stdin'
-
     missing_config_regex = re.compile(
         r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
         re.DOTALL
@@ -70,6 +68,13 @@ class ESLint(NodeLinter):
         'prefer_eslint_d': True,
     }
 
+    def cmd(self):
+        cmd = ['eslint', '--format=json', '--stdin']
+        stdin_filename = self.get_stdin_filename()
+        if stdin_filename:
+            cmd.append('--stdin-filename=' + stdin_filename)
+        return cmd
+
     def run(self, cmd, code):
         # Workaround eslint bug https://github.com/eslint/eslint/issues/9515
         # Fixed in eslint 4.10.0
@@ -77,11 +82,6 @@ class ESLint(NodeLinter):
             code = ' '
 
         self.ensure_plugin_installed()
-
-        stdin_filename = self.get_stdin_filename()
-        if stdin_filename:
-            cmd.append('--stdin-filename=' + stdin_filename)
-
         return super().run(cmd, code)
 
     def ensure_plugin_installed(self) -> bool:
@@ -138,11 +138,12 @@ class ESLint(NodeLinter):
         self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
 
-    def get_stdin_filename(self) -> str:
+    def get_stdin_filename(self) -> str | None:
         filename = self.view.file_name()
         if filename is None:
+            view_selectors = set(self.view.scope_name(0).split(' '))
             for selector in BUFFER_FILE_EXTENSIONS.keys():
-                if self.view.match_selector(0, selector):
+                if selector in view_selectors:
                     filename = '.'.join([BUFFER_FILE_STEM, BUFFER_FILE_EXTENSIONS[selector]])
                     break
         return filename
@@ -204,7 +205,7 @@ class ESLint(NodeLinter):
             filename = entry.get('filePath', None)
             if filename == '<text>':
                 filename = 'stdin'
-            elif filename.split(os.path.sep)[-1].split('.')[0] == BUFFER_FILE_STEM:
+            elif filename and os.path.basename(filename).startswith(BUFFER_FILE_STEM + '.'):
                 filename = 'stdin'
 
             for match in entry['messages']:
