@@ -22,7 +22,7 @@ from SublimeLinter.lint.base_linter.node_linter import read_json_file
 
 MYPY = False
 if MYPY:
-    from typing import List, Union
+    from typing import List, Optional, Union
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -37,14 +37,26 @@ PLUGINS = {
     '@angular-eslint/eslint-plugin': 'text.html',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
     'tsdx': 'source.ts, source.tsx',
+    'eslint-plugin-yml': 'source.yaml',
+    'eslint-plugin-yaml': 'source.yaml',
 }
 OPTIMISTIC_SELECTOR = ', '.join({STANDARD_SELECTOR} | set(PLUGINS.values()))
+
+BUFFER_FILE_STEM = '__buffer__'
+BUFFER_FILE_EXTENSIONS = {
+    'source.js': 'js',
+    'source.jsx': 'jsx',
+    'text.html': 'html',
+    'text.html.vue': 'vue',
+    'source.ts': 'ts',
+    'source.tsx': 'tsx',
+    'source.json': 'json',
+    'source.yaml': 'yaml',
+}
 
 
 class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
-
-    cmd = 'eslint --format json --stdin'
 
     missing_config_regex = re.compile(
         r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
@@ -53,9 +65,15 @@ class ESLint(NodeLinter):
     line_col_base = (1, 1)
     defaults = {
         'selector': OPTIMISTIC_SELECTOR,
-        '--stdin-filename': '${file}',
         'prefer_eslint_d': True,
     }
+
+    def cmd(self):
+        cmd = ['eslint', '--format=json', '--stdin']
+        stdin_filename = self.get_stdin_filename()
+        if stdin_filename:
+            cmd.append('--stdin-filename=' + stdin_filename)
+        return cmd
 
     def run(self, cmd, code):
         # Workaround eslint bug https://github.com/eslint/eslint/issues/9515
@@ -120,6 +138,17 @@ class ESLint(NodeLinter):
         self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
 
+    def get_stdin_filename(self):
+        # type: () -> Optional[str]
+        filename = self.view.file_name()
+        if filename is None:
+            view_selectors = set(self.view.scope_name(0).split(' '))
+            for selector in BUFFER_FILE_EXTENSIONS.keys():
+                if selector in view_selectors:
+                    filename = '.'.join([BUFFER_FILE_STEM, BUFFER_FILE_EXTENSIONS[selector]])
+                    break
+        return filename
+
     def find_local_executable(self, start_dir, npm_name):
         # type: (str, str) -> Union[None, str, List[str]]
         """Automatically switch to `eslint_d` if available (and wanted)."""
@@ -176,6 +205,8 @@ class ESLint(NodeLinter):
         for entry in content:
             filename = entry.get('filePath', None)
             if filename == '<text>':
+                filename = 'stdin'
+            elif filename and os.path.basename(filename).startswith(BUFFER_FILE_STEM + '.'):
                 filename = 'stdin'
 
             for match in entry['messages']:
