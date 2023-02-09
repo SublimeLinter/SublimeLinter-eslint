@@ -125,9 +125,9 @@ touch .eslintrc
 echo '{ "rules": {} }' > .eslintrc
 ```
 
-### I am using `eslint_d` and the linter suddently stops working
+### I use `eslint_d` and the linter suddently stopped working
 
-If you're using `eslint_d` and the linter suddently stops working with an error message like "Error: ENOENT: no such file or directory, open /../eslint/node_modules/globals/index.js", a restart of `eslint_d` might resolve the problem:
+If you use `eslint_d` and the linter suddently stopped working with an error message like "Error: ENOENT: no such file or directory, open /../eslint/node_modules/globals/index.js", a restart of `eslint_d` might resolve the problem:
 
 ```bash
 eslint_d restart
