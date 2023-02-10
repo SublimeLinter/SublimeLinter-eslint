@@ -124,3 +124,11 @@ cd $HOME # or cd %HOMEPATH% on Windows
 touch .eslintrc
 echo '{ "rules": {} }' > .eslintrc
 ```
+
+### I use `eslint_d` and the linter suddently stopped working
+
+If you use `eslint_d` and the linter suddently stopped working with an error message like "Error: ENOENT: no such file or directory, open /../eslint/node_modules/globals/index.js", a restart of `eslint_d` might resolve the problem:
+
+```bash
+eslint_d restart
+```
