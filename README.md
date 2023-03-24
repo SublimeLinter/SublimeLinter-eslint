@@ -56,7 +56,7 @@ For [Vue.js](https://vuejs.org/) `.vue` files it would be:
 }
 ```
 
-For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte3`](https://github.com/sveltejs/eslint-plugin-svelte3) and the [Naomi](https://packagecontrol.io/packages/Naomi) syntax highlighter set to HTML 5, it would be:
+For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte3`](https://github.com/sveltejs/eslint-plugin-svelte3) and [Svelte]https://packagecontrol.io/packages/Svelte) syntax highlighting, it would be:
 
 ```json
 "linters": {
