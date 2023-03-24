@@ -61,7 +61,7 @@ For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte3
 ```json
 "linters": {
     "eslint": {
-        "selector": "text.html, source.js - meta.attribute-with-value"
+        "selector": "text.html.svelte, source.js - meta.attribute-with-value"
     }
 }
 ```
