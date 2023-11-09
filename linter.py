@@ -72,7 +72,7 @@ class ESLint(NodeLinter):
         cmd = ['eslint', '--format=json', '--stdin']
         stdin_filename = self.get_stdin_filename()
         if stdin_filename:
-            cmd.append('--stdin-filename=' + stdin_filename)
+            cmd.append('--stdin-filename=' + stdin_filename.replace('$', '\\$'))
         return cmd
 
     def run(self, cmd, code):
