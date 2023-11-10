@@ -65,15 +65,24 @@ class ESLint(NodeLinter):
     line_col_base = (1, 1)
     defaults = {
         'selector': OPTIMISTIC_SELECTOR,
+        '--stdin-filename': '${file:fallback_filename}',
         'prefer_eslint_d': True,
     }
 
     def cmd(self):
-        cmd = ['eslint', '--format=json', '--stdin']
-        stdin_filename = self.get_stdin_filename()
-        if stdin_filename:
-            cmd.append('--stdin-filename=' + stdin_filename.replace('$', '\\$'))
-        return cmd
+        if not self.context.get('file'):
+            fallback_filename = self.compute_fallback_filename()
+            if fallback_filename:
+                self.context['fallback_filename'] = fallback_filename
+        return ['eslint', '--format=json', '--stdin']
+
+    def compute_fallback_filename(self):
+        # type: () -> Optional[str]
+        view_selectors = set(self.view.scope_name(0).split(' '))
+        for selector in BUFFER_FILE_EXTENSIONS.keys():
+            if selector in view_selectors:
+                return '.'.join([BUFFER_FILE_STEM, BUFFER_FILE_EXTENSIONS[selector]])
+        return None
 
     def run(self, cmd, code):
         # Workaround eslint bug https://github.com/eslint/eslint/issues/9515
@@ -137,17 +146,6 @@ class ESLint(NodeLinter):
             "override this behavior, or install the required dependencies.")
         self.notify_unassign()  # Abort linting without popping error dialog
         raise PermanentError()
-
-    def get_stdin_filename(self):
-        # type: () -> Optional[str]
-        filename = self.view.file_name()
-        if filename is None:
-            view_selectors = set(self.view.scope_name(0).split(' '))
-            for selector in BUFFER_FILE_EXTENSIONS.keys():
-                if selector in view_selectors:
-                    filename = '.'.join([BUFFER_FILE_STEM, BUFFER_FILE_EXTENSIONS[selector]])
-                    break
-        return filename
 
     def find_local_executable(self, start_dir, npm_name):
         # type: (str, str) -> Union[None, str, List[str]]
