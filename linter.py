@@ -59,7 +59,7 @@ class ESLint(NodeLinter):
     """Provides an interface to the eslint executable."""
 
     missing_config_regex = re.compile(
-        r'^(.*?)\r?\n\w*(ESLint couldn\'t find a configuration file.)',
+        r"^(.*?)\r?\n\w*(ESLint couldn't find a configuration file.)",
         re.DOTALL
     )
     line_col_base = (1, 1)
