@@ -2,5 +2,6 @@
 max-line-length = 100
 
 ignore =
+  E731,
   D1,
   W503

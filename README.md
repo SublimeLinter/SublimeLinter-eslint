@@ -23,6 +23,19 @@ npm install -g eslint
 npm install -D eslint
 ```
 
+## Quick Fixes
+
+`eslint` provides fixes for some errors.  These fixes are available in SublimeLinter as quick actions. See the Command Palette: `SublimeLinter: Quick Action`.  (Also: https://github.com/SublimeLinter/SublimeLinter#quick-actionsfixers)
+
+You may want to define a key binding:
+
+```
+    // To trigger a quick action
+    { "keys": ["ctrl+k", "ctrl+f"],
+      "command": "sublime_linter_quick_actions"
+    },
+```
+
 ## Using eslint with plugins (e.g. vue)
 
 SublimeLinter will detect _some_ installed **local** plugins, and thus it should work automatically for e.g. `.vue` or `.ts` files. If it works on the command line, there is a chance it works in Sublime without further ado.  

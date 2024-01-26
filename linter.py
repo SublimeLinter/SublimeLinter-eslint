@@ -10,19 +10,27 @@
 
 """This module exports the ESLint plugin class."""
 
+from functools import partial
 import json
 import logging
 import os
 import re
 import shutil
-from SublimeLinter.lint import LintMatch, NodeLinter, PermanentError
 
+import sublime
+
+from SublimeLinter.lint import LintMatch, NodeLinter, PermanentError
 from SublimeLinter.lint.base_linter.node_linter import read_json_file
+from SublimeLinter.lint.quick_fix import (
+    TextRange, QuickAction, merge_actions_by_code_and_line, quick_actions_for)
 
 
 MYPY = False
 if MYPY:
-    from typing import List, Optional, Union
+    from typing import Iterator, List, Optional, Union
+    from SublimeLinter.lint import util
+    from SublimeLinter.lint.linter import VirtualView
+    from SublimeLinter.lint.persist import LintError
 
 
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
@@ -177,21 +185,27 @@ class ESLint(NodeLinter):
             logger.error(stderr)
             self.notify_failure()
 
-    def find_errors(self, output):
+    def parse_output(self, proc, virtual_view):  # type: ignore[override]
+        # type: (util.popen_output, VirtualView) -> Iterator[LintError]
         """Parse errors from linter's output."""
+        assert proc.stdout is not None
+        assert proc.stderr is not None
+        if proc.stderr.strip():
+            self.on_stderr(proc.stderr)
+
         try:
             # It is possible that users output debug messages to stdout, so we
             # only parse the last line, which is hopefully the actual eslint
             # output.
             # https://github.com/SublimeLinter/SublimeLinter-eslint/issues/251
-            last_line = output.rstrip().split('\n')[-1]
+            last_line = proc.stdout.rstrip().split('\n')[-1]
             content = json.loads(last_line)
         except ValueError:
             logger.error(
                 "JSON Decode error: We expected JSON from 'eslint', "
                 "but instead got this:\n{}\n\n"
                 "Be aware that we only parse the last line of above "
-                "output.".format(output))
+                "output.".format(proc.stdout))
             self.notify_failure()
             return
 
@@ -207,26 +221,63 @@ class ESLint(NodeLinter):
             elif filename and os.path.basename(filename).startswith(BUFFER_FILE_STEM + '.'):
                 filename = 'stdin'
 
-            for match in entry['messages']:
-                if match['message'].startswith('File ignored'):
+            for item in entry['messages']:
+                if item['message'].startswith('File ignored'):
                     continue
 
-                if 'line' not in match:
-                    logger.error(match['message'])
+                if 'line' not in item:
+                    logger.error(item['message'])
                     self.notify_failure()
                     continue
 
-                yield LintMatch(
-                    match=match,
+                match = LintMatch(
+                    match=item,
                     filename=filename,
-                    line=match['line'] - 1,  # apply line_col_base manually
-                    col=_try(lambda: match['column'] - 1),
-                    end_line=_try(lambda: match['endLine'] - 1),
-                    end_col=_try(lambda: match['endColumn'] - 1),
-                    error_type='error' if match['severity'] == 2 else 'warning',
-                    code=match.get('ruleId', ''),
-                    message=match['message'],
+                    line=item['line'] - 1,  # apply line_col_base manually
+                    col=_try(lambda: item['column'] - 1),
+                    end_line=_try(lambda: item['endLine'] - 1),
+                    end_col=_try(lambda: item['endColumn'] - 1),
+                    error_type='error' if item['severity'] == 2 else 'warning',
+                    code=item.get('ruleId', ''),
+                    message=item['message'],
                 )
+                error = self.process_match(match, virtual_view)
+                if error:
+                    try:
+                        fix_description = item["fix"]
+                    except KeyError:
+                        pass
+                    else:
+                        if fix_description:
+                            error["fix"] = fix_description  # type: ignore[typeddict-unknown-key]
+                    yield error
+
+
+@quick_actions_for("eslint")
+def eslint_fixes_provider(errors, _view):
+    # type: (List[LintError], Optional[sublime.View]) -> Iterator[QuickAction]
+    def make_action(error):
+        # type: (LintError) -> QuickAction
+        return QuickAction(
+            "eslint: Fix {code}".format(**error),
+            partial(eslint_fix_error, error),
+            "{msg}".format(**error),
+            solves=[error]
+        )
+
+    except_ = lambda error: "fix" not in error
+    yield from merge_actions_by_code_and_line(make_action, except_, errors, _view)
+
+
+def eslint_fix_error(error, view) -> "Iterator[TextRange]":
+    """
+    'fix': {'text': ';  ', 'range': [40, 44]}
+    """
+    fix_description = error["fix"]
+    yield TextRange(
+        fix_description["text"],
+        sublime.Region(*fix_description["range"])
+    )
 
 
 def _try(getter, otherwise=None, catch=Exception):
