@@ -193,6 +193,10 @@ class ESLint(NodeLinter):
         if proc.stderr.strip():
             self.on_stderr(proc.stderr)
 
+        if not proc.stdout:
+            self.logger.info('{}: no output'.format(self.name))
+            return
+
         try:
             # It is possible that users output debug messages to stdout, so we
             # only parse the last line, which is hopefully the actual eslint
