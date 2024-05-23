@@ -69,7 +69,7 @@ For [Vue.js](https://vuejs.org/) `.vue` files it would be:
 }
 ```
 
-For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte3`](https://github.com/sveltejs/eslint-plugin-svelte3) and [Svelte](https://packagecontrol.io/packages/Svelte) syntax highlighting, it would be:
+For [Svelte](https://svelte.dev/) `.svelte` files, using [`eslint-plugin-svelte`](https://github.com/sveltejs/eslint-plugin-svelte) and [Svelte](https://packagecontrol.io/packages/Svelte) syntax highlighting, it would be:
 
 ```json
 "linters": {
