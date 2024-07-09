@@ -40,6 +40,7 @@ STANDARD_SELECTOR = 'source.js, source.jsx'
 PLUGINS = {
     'eslint-plugin-html': 'text.html',
     'eslint-plugin-json': 'source.json',
+    'eslint-plugin-react': 'source.js, source.jsx, source.mjs, source.cjs, source.ts, source.tsx',
     'eslint-plugin-svelte': 'text.html',
     'eslint-plugin-svelte3': 'text.html',
     'eslint-plugin-vue': 'text.html.vue',
