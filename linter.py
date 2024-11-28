@@ -79,12 +79,30 @@ class ESLint(NodeLinter):
         'prefer_eslint_d': True,
     }
 
+    def find_flat_config(self, start_dir):
+        """Find the nearest eslint.config.js file starting from the given directory."""
+        current = start_dir
+        while current and current != os.path.dirname(current):
+            config_path = os.path.join(current, 'eslint.config.js')
+            if os.path.isfile(config_path):
+                return config_path
+            current = os.path.dirname(current)
+        return None
+
     def cmd(self):
         if not self.context.get('file'):
             fallback_filename = self.compute_fallback_filename()
             if fallback_filename:
                 self.context['fallback_filename'] = fallback_filename
-        return ['eslint', '--format=json', '--stdin']
+
+        cmd = ['eslint', '--format=json', '--stdin']
+
+        # If we have a real file (not a buffer), try to find flat config
+        if file_path := self.context.get('file'):
+            if config_path := self.find_flat_config(os.path.dirname(file_path)):
+                cmd.extend(['--config', config_path])
+
+        return cmd
 
     def compute_fallback_filename(self):
         # type: () -> Optional[str]
