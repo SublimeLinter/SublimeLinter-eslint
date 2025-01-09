@@ -44,6 +44,7 @@ PLUGINS = {
     'eslint-plugin-svelte': 'text.html',
     'eslint-plugin-svelte3': 'text.html',
     'eslint-plugin-vue': 'text.html.vue',
+    'angular-eslint': 'source.ts, text.html',
     '@angular-eslint/eslint-plugin': 'source.ts, text.html',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
     'tsdx': 'source.ts, source.tsx',
