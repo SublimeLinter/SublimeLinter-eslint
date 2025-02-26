@@ -47,6 +47,7 @@ PLUGINS = {
     'angular-eslint': 'source.ts, text.html',
     '@angular-eslint/eslint-plugin': 'source.ts, text.html',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
+    'typescript-eslint': 'source.ts, source.tsx',
     'tsdx': 'source.ts, source.tsx',
     'eslint-plugin-yml': 'source.yaml',
     'eslint-plugin-yaml': 'source.yaml',
