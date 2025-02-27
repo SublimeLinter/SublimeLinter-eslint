@@ -36,7 +36,7 @@ if MYPY:
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
 
 
-STANDARD_SELECTOR = 'source.js, source.jsx'
+STANDARD_SELECTOR = 'source.js, source.jsx, source.mjs, source.cjs'
 PLUGINS = {
     'eslint-plugin-astro': 'source.astro',
     'eslint-plugin-html': 'text.html',
@@ -47,6 +47,7 @@ PLUGINS = {
     'eslint-plugin-vue': 'text.html.vue',
     'angular-eslint': 'source.ts, text.html',
     '@angular-eslint/eslint-plugin': 'source.ts, text.html',
+    'typescript-eslint': 'source.ts, source.tsx',
     '@typescript-eslint/parser': 'source.ts, source.tsx',
     'tsdx': 'source.ts, source.tsx',
     'eslint-plugin-yml': 'source.yaml',
