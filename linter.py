@@ -36,7 +36,7 @@ if MYPY:
 logger = logging.getLogger('SublimeLinter.plugin.eslint')
 
 
-STANDARD_SELECTOR = 'source.js, source.jsx'
+STANDARD_SELECTOR = 'source.js, source.jsx, source.mjs, source.cjs'
 PLUGINS = {
     'eslint-plugin-html': 'text.html',
     'eslint-plugin-json': 'source.json',
