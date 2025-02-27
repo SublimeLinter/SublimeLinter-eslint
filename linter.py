@@ -38,7 +38,7 @@ logger = logging.getLogger('SublimeLinter.plugin.eslint')
 
 STANDARD_SELECTOR = 'source.js, source.jsx'
 PLUGINS = {
-    'eslint-plugin-astro': 'source.astro, text.html.astro, meta.template.astro, text.html.markdown.jsx',
+    'eslint-plugin-astro': 'source.astro',
     'eslint-plugin-html': 'text.html',
     'eslint-plugin-json': 'source.json',
     'eslint-plugin-react': 'source.js, source.jsx, source.mjs, source.cjs, source.ts, source.tsx',
